@@ -1,0 +1,37 @@
+{
+  "auth": {
+    "username": "[DATA EXPONGED]",
+    "clientID": "[DATA EXPONGED]",
+    "secret": "[DATA EXPONGED]",
+    "token": "[DATA EXPONGED]"
+  },
+  "prefs": {
+    "prefix": "!",
+    "playing": "",
+    "version": "2.0ɑ build 3"
+  },
+  "perms": {
+    "whitelistChannels": false,
+    "whitelistedChannels": [
+      "[put a channel ID (not a #channel) here]"
+    ],
+    "blacklistedChannels": [
+      "[put a channel ID (not a #channel) here]"
+    ]
+  },
+  "users": {
+    "bravoOverride":true,
+    "blacklistedUsers": [
+      ""
+    ],
+    "alphaUsers": [
+      "[put a user ID (not a @username#1234) here]"
+    ],
+    "bravoUsers": [
+      ""
+    ],
+    "charlieUsers": [
+      ""
+    ]
+  }
+}
