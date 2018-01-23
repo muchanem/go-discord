@@ -1,14 +1,14 @@
 {
   "auth": {
-    "username": "[DATA EXPONGED]",
-    "clientID": "[DATA EXPONGED]",
-    "secret": "[DATA EXPONGED]",
-    "token": "[DATA EXPONGED]"
+    "username": "$USERNAME",
+    "clientID": "$ID",
+    "secret": "$SECRET",
+    "token": "$TOKEN"
   },
   "prefs": {
     "prefix": "!",
     "playing": "",
-    "version": "2.0ɑ build 3"
+    "version": "3.1α build 1"
   },
   "perms": {
     "whitelistChannels": false,
@@ -20,17 +20,18 @@
     ]
   },
   "users": {
-    "bravoOverride":true,
-    "blacklistedUsers": [
+    "roleWhitelist":false,
+    "reportPermissionFailures":false,
+    "blacklistedRoles": [
       ""
     ],
-    "alphaUsers": [
+    "adminRoles": [
       "[put a user ID (not a @username#1234) here]"
     ],
-    "bravoUsers": [
+    "staffRoles": [
       ""
     ],
-    "charlieUsers": [
+    "standardRoles": [
       ""
     ]
   }

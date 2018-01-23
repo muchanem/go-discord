@@ -33,10 +33,17 @@ func main() {
 	}
 	fmt.Println(c.B0 + "Writing bot preferences to skilbot")
 	f.MyBot = bot
-	runBot(f.MyBot.Auth.Username, f.MyBot.Auth.Secret, f.MyBot.Auth.ClientID, f.MyBot.Auth.Token)
+	f.DG = runBot(f.MyBot.Auth.Username, f.MyBot.Auth.Secret, f.MyBot.Auth.ClientID, f.MyBot.Auth.Token)
+
+	fmt.Println(c.B0 + "Bot is now running! Press CTRL+C to exit." + c.X)
+	sc := make(chan os.Signal, 1)
+	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
+	<-sc
+
+	f.DG.Close()
 }
 
-func runBot(username string, secret string, id string, token string) {
+func runBot(username string, secret string, id string, token string) *dsg.Session {
 	fmt.Println(c.B01 + "Info provided:")
 	fmt.Println(c.B00 + "Username  : " + c.O + username)
 	fmt.Println(c.B00 + "Secret    : " + c.O + secret)
@@ -64,11 +71,5 @@ func runBot(username string, secret string, id string, token string) {
 	} else {
 		fmt.Println(c.G + "Socket successfully opened.")
 	}
-
-	fmt.Println(c.B0 + "Bot is now running! Press CTRL+C to exit.")
-	sc := make(chan os.Signal, 1)
-	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
-	<-sc
-
-	dg.Close()
+	return dg
 }
