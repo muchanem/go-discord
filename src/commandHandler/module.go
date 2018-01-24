@@ -96,6 +96,10 @@ func MessageCreate(s *dsg.Session, m *dsg.MessageCreate) {
 * THIS IS BY DESIGN. DON'T CHANGE IT THINKING I WAS JUST LAZY.
  */
 func canTriggerBot(s *dsg.Session, m *dsg.Message) (bool, error) {
+	if m.Author.Bot {
+		return false, nil
+	}
+
 	admin, err := f.HasRole(s, m, "")
 	if err != nil {
 		return false, err
