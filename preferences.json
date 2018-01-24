@@ -1,38 +1,39 @@
 {
   "auth": {
-    "username": "$USERNAME",
-    "clientID": "$ID",
-    "secret": "$SECRET",
-    "token": "$TOKEN"
+    "username": "",
+    "clientID": "",
+    "secret": "",
+    "token": ""
   },
   "prefs": {
-    "prefix": "!",
-    "playing": "",
-    "version": "3.1.1α build 1"
+    "prefix": ">",
+    "playing": "learn.skilstak.io",
+    "version": "3.0α build 1"
   },
   "perms": {
-    "whitelistChannels": false,
+    "whitelistChannels": true,
     "whitelistedChannels": [
-      "[put a channel ID (not a #channel) here]"
+      "402922887775911946"
     ],
     "blacklistedChannels": [
-      "[put a channel ID (not a #channel) here]"
+      "99994161289134080"
     ]
   },
   "users": {
     "roleWhitelist":false,
-    "reportPermissionFailures":false,
+    "reportPermissionFailures":true,
     "blacklistedRoles": [
       ""
     ],
     "adminRoles": [
-      "[put a user ID (not a @username#1234) here]"
+      "381125707700633601",
+      "381287465195143199"
     ],
     "staffRoles": [
       ""
     ],
     "standardRoles": [
-      ""
+      "390143451275984917"
     ]
   }
 }
