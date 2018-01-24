@@ -45,7 +45,7 @@ func MessageCreate(s *dsg.Session, m *dsg.MessageCreate) {
 
 	// The trailing > is cut off the message so the commands can be more easily handled.
 	msg := strings.SplitAfterN(messageSanatized, f.MyBot.Prefs.Prefix, 2)
-	message := strings.Split(msg[1], " ")
+	message := strings.SplitAfterN(msg[1], " ", -1)
 
 	// Now the message is run to see if its a valid command.
 	switch message[0] {
