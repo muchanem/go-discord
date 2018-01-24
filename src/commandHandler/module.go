@@ -96,6 +96,10 @@ func MessageCreate(s *dsg.Session, m *dsg.MessageCreate) ***REMOVED***
 * THIS IS BY DESIGN. DON'T CHANGE IT THINKING I WAS JUST LAZY.
  */
 func canTriggerBot(s *dsg.Session, m *dsg.Message) (bool, error) ***REMOVED***
+	if m.Author.Bot ***REMOVED***
+		return false, nil
+	***REMOVED***
+
 	admin, err := f.HasRole(s, m, "")
 	if err != nil ***REMOVED***
 		return false, err
