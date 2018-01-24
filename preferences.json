@@ -1,38 +1,39 @@
 ***REMOVED***
   "auth": ***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
+    "username": "",
+    "clientID": "",
+    "secret": "",
+    "token": ""
 ***REMOVED***
   "prefs": ***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
+    "prefix": ">",
+    "playing": "learn.skilstak.io",
+    "version": "3.0α build 1"
 ***REMOVED***
   "perms": ***REMOVED***
+    "whitelistChannels": true,
+***REMOVED***
+      "402922887775911946"
 ***REMOVED***
 ***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
+      "99994161289134080"
 ***REMOVED***
 ***REMOVED***
   "users": ***REMOVED***
 ***REMOVED***
+    "reportPermissionFailures":true,
+***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
+      "381125707700633601",
+      "381287465195143199"
 ***REMOVED***
 ***REMOVED***
 ***REMOVED***
 ***REMOVED***
 ***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
+      "390143451275984917"
 ***REMOVED***
 ***REMOVED***
 ***REMOVED***
