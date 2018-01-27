@@ -6,7 +6,7 @@ import (
 	//	"strconv"
 	a "../flagParser"
 	"strings"
-	"time"
+	//"time"
 )
 
 /* # MessageCreate
@@ -53,7 +53,8 @@ func MessageCreate(s *dsg.Session, m *dsg.MessageCreate) {
 	// Now the message is run to see if its a valid command.
 	switch message[0] {
 	case "help":
-		help(s, m, message)
+		print("aint happenign m8.")
+		//help(s, m, message)
 	case "ping":
 		s.ChannelMessageSend(m.ChannelID, "Pong!")
 	case "info":
@@ -212,6 +213,6 @@ func getBotInfo() *dsg.MessageEmbed {
 * TODO: Make the help not hard coded. Move into json file? Massive refactor for
 * v5.0-alpha probably.
  */
-func help(s *dsg.Session, m *dsg.Message, f []*a.Flag) {
+//func help(s *dsg.Session, m *dsg.Message, f []*a.Flag) {
 
-}
+//}
