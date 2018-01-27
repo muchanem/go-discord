@@ -35,6 +35,8 @@ func main() {
 	f.MyBot = bot
 	f.DG = runBot(f.MyBot.Auth.Username, f.MyBot.Auth.Secret, f.MyBot.Auth.ClientID, f.MyBot.Auth.Token)
 
+	f.DG.UpdateStatus(0, f.MyBot.Prefs.Playing)
+
 	fmt.Println(c.B0 + "Bot is now running! Press CTRL+C to exit." + c.X)
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)

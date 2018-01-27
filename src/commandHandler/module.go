@@ -4,7 +4,9 @@ import (
 	f "../foundation"
 	dsg "github.com/bwmarrin/discordgo"
 	//	"strconv"
+	a "../flagParser"
 	"strings"
+	//"time"
 )
 
 /* # MessageCreate
@@ -33,7 +35,7 @@ func MessageCreate(s *dsg.Session, m *dsg.MessageCreate) {
 	// The message is checked to see if its a command and can be run
 	canRunCommand, err := canTriggerBot(s, m.Message)
 	if err != nil {
-		s.ChannelMessageSend(m.ChannelID, "**FATAL. ERROR ENCOUNTERED IN PARSING MESSAGE. DETAILS FOLLOW:**\n"+err.Error()+"\n**CRASHING THE BOT.** Have a good day!")
+		s.ChannelMessageSend(m.ChannelID, "**FATAL. ERROR ENCOUNTERED IN PARSING MESSAGE. DETAILS FOLLOW:**\n"+err.Error()+"\n**CRASHING THE BOT.** *Have a good day!*")
 		panic(-1)
 	}
 	if canRunCommand != true {
@@ -45,12 +47,14 @@ func MessageCreate(s *dsg.Session, m *dsg.MessageCreate) {
 
 	// The trailing > is cut off the message so the commands can be more easily handled.
 	msg := strings.SplitAfterN(messageSanatized, f.MyBot.Prefs.Prefix, 2)
-	message := strings.SplitAfterN(msg[1], " ", -1)
+	message := strings.Split(msg[1], " ")
+	flags := a.ParseFlags(message)
 
 	// Now the message is run to see if its a valid command.
 	switch message[0] {
 	case "help":
-		s.ChannelMessageSend(m.ChannelID, "Still working on this--- whoops.")
+		print("aint happenign m8.")
+		//help(s, m, message)
 	case "ping":
 		s.ChannelMessageSend(m.ChannelID, "Pong!")
 	case "info":
@@ -186,3 +190,29 @@ func getBotInfo() *dsg.MessageEmbed {
 		},
 	}
 }
+
+/* # Get bot help
+* Overcomplecated for little good reason
+*
+* Parameters:
+* - s (type *discordgo.Session) The discord session, this function will manage
+*	responding to users instead of a message handler.
+* - m (type *discordgo.Session) The message (or a sanitized version of the
+*	message) to be used if needed by certain options.
+* - f (type []*flagParser.Flag) All the flags and modifiers used with the
+*	command.
+*
+* Note that this function handles responding instead of returning a value to
+* its parent to be sent out.
+*
+* Flags:
+* -d | Sends the result via dm.
+* -t | Sends the result as standard text (opposed to an embed)
+* --command $COMMAND | gets help for the $COMMAND
+*
+* TODO: Make the help not hard coded. Move into json file? Massive refactor for
+* v5.0-alpha probably.
+ */
+//func help(s *dsg.Session, m *dsg.Message, f []*a.Flag) {
+
+//}
