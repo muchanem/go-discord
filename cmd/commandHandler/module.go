@@ -7,8 +7,12 @@ import (
 	a "github.com/skilstak/discord-public/flags" // muchanem: only used within the "flags variabe (line 51)" and the commented help variable
 	"strings"
 	//"time"
+	"github.com/skilstak/discord-public/cmd/commands"
 )
-
+var cmd = map[string]func ()  {
+	"ping": commands.Ping()
+	"info": commands.Info()
+}
 /* # MessageCreate
 * The world's bigest switch statment
 *
