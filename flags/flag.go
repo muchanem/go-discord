@@ -16,11 +16,11 @@ const (
 //  - Values: Single string of values after flag.
 //      Ex: --name gabe miller --> Values = gabe miller
 //
-type Flag struct ***REMOVED***
+type Flag struct {
 	Type  Type
 	Name  string
 	Value []string
-***REMOVED***
+}
 
 // Parse parses a message for flags.
 //
@@ -30,26 +30,26 @@ type Flag struct ***REMOVED***
 // Returns:
 // - ([]*Flag) | A slice of each flag type
 //
-func Parse(args []string) []*Flag ***REMOVED***
-	flags := []*Flag***REMOVED******REMOVED***
+func Parse(args []string) []*Flag {
+	flags := []*Flag{}
 	var cur *Flag
-	for _, arg := range args ***REMOVED***
-		switch ***REMOVED***
+	for _, arg := range args {
+		switch {
 		case len(arg) > 1 && arg[:2] == "--":
-			cur = &Flag***REMOVED***
+			cur = &Flag{
 				Type: DoubleDash,
 				Name: arg[2:],
-			***REMOVED***
+			}
 			flags = append(flags, cur)
 		case arg[0] == '-':
-			cur = &Flag***REMOVED***
+			cur = &Flag{
 				Type: Dash,
 				Name: arg[1:],
-			***REMOVED***
+			}
 			flags = append(flags, cur)
 		default:
 			cur.Value = append(cur.Value, arg)
-		***REMOVED***
-	***REMOVED***
+		}
+	}
 	return flags
-***REMOVED***
+}

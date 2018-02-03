@@ -13,32 +13,32 @@ import (
 *       passed in as parameters because the rest isn't nearly as important.
 *
  */
-type BotType struct ***REMOVED***
-	Auth struct ***REMOVED***
+type BotType struct {
+	Auth struct {
 		Username string `json:"username"`
 		ClientID string `json:"clientID"`
 		Secret   string `json:"secret"`
 		Token    string `json:"token"`
-	***REMOVED*** `json:"auth"`
-	Prefs struct ***REMOVED***
+	} `json:"auth"`
+	Prefs struct {
 		Prefix  string `json:"prefix"`
 		Playing string `json:"playing"`
 		Version string `json:"version"`
-	***REMOVED*** `json:"prefs"`
-	Perms struct ***REMOVED***
+	} `json:"prefs"`
+	Perms struct {
 		WhitelistChannels   bool     `json:"whitelistChannels"`
 		WhitelistedChannels []string `json:"whitelistedChannels"`
 		BlacklistedChannels []string `json:"blacklistedChannels"`
-	***REMOVED*** `json:"perms"`
-	Users struct ***REMOVED***
+	} `json:"perms"`
+	Users struct {
 		RoleWhitelist    bool     `json:"roleWhitelist"`
 		ReportPermFails  bool     `json:"reportPermissionFailures"`
 		BlacklistedRoles []string `json:"blacklistedRoles"`
 		AdminRoles       []string `json:"adminRoles"`
 		StaffRoles       []string `json:"staffRoles"`
 		StandardRoles    []string `json:"standardUser"`
-	***REMOVED*** `json:"users"`
-***REMOVED***
+	} `json:"users"`
+}
 
 /* # Get the guild a message was sent in.
 * What a pain in the arse.
@@ -53,17 +53,17 @@ type BotType struct ***REMOVED***
 * - err (type error)           | If an error was encountered during the process
 *	This error is an SEP (someone else's problem).
  */
-func GetGuild(s *dsg.Session, m *dsg.Message) (st *dsg.Guild, err error) ***REMOVED***
+func GetGuild(s *dsg.Session, m *dsg.Message) (st *dsg.Guild, err error) {
 	chn, err := s.Channel(m.ChannelID)
-	if err != nil ***REMOVED***
-		return &dsg.Guild***REMOVED******REMOVED***, err
-	***REMOVED***
+	if err != nil {
+		return &dsg.Guild{}, err
+	}
 
 	gid := chn.GuildID
 
 	return s.Guild(gid)
 
-***REMOVED***
+}
 
 /* # Checks if user can run a command
 * This is a more detailed check to see if a user has the role perms to run a
@@ -89,24 +89,24 @@ func GetGuild(s *dsg.Session, m *dsg.Message) (st *dsg.Guild, err error) ***REMO
 * automatic true regardless if they have the role listed. Hence if you want to
 * lock off a command to only "admin" users, provide an empty string
  */
-func HasRole(s *dsg.Session, m *dsg.Message, role string) (bool, error) ***REMOVED***
+func HasRole(s *dsg.Session, m *dsg.Message, role string) (bool, error) {
 	guild, err := GetGuild(s, m)
-	if err != nil ***REMOVED***
+	if err != nil {
 		return false, err
-	***REMOVED***
+	}
 	member, err := s.GuildMember(guild.ID, m.Author.ID)
-	if err != nil ***REMOVED***
+	if err != nil {
 		return false, err
-	***REMOVED***
-	for _, b := range MyBot.Users.AdminRoles ***REMOVED***
-		if Contains(member.Roles, b) ***REMOVED***
+	}
+	for _, b := range MyBot.Users.AdminRoles {
+		if Contains(member.Roles, b) {
 			return true, nil
-		***REMOVED***
-	***REMOVED***
+		}
+	}
 
 	hasRole := Contains(member.Roles, role)
 	return hasRole, nil
-***REMOVED***
+}
 
 /* # Check if item is in array
 * This function checks if a value is in a slice (string only)
@@ -122,14 +122,14 @@ func HasRole(s *dsg.Session, m *dsg.Message, role string) (bool, error) ***REMOV
 * this function to ContainsSliceString() and the other function to
 * ContainsSlice<T>() where <T> is the generic type.
  */
-func Contains(list []string, item string) bool ***REMOVED***
-	for _, b := range list ***REMOVED***
-		if b == item ***REMOVED***
+func Contains(list []string, item string) bool {
+	for _, b := range list {
+		if b == item {
 			return true
-		***REMOVED***
-	***REMOVED***
+		}
+	}
 	return false
-***REMOVED***
+}
 
 // An initialized instance of the BotType for use everywhere in this project.
 var MyBot BotType

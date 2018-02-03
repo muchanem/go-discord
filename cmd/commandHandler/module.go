@@ -1,10 +1,10 @@
 package nil
 
 import (
-	f "../foundation"
 	dsg "github.com/bwmarrin/discordgo"
+	f "github.com/skilstak/discord-public/lib"
 	//	"strconv"
-	a "../flagParser"
+	a "github.com/skilstak/discord-public/flags" // muchanem: only used within the "flags variabe (line 51)" and the commented help variable
 	"strings"
 	//"time"
 )
@@ -31,16 +31,16 @@ import (
 *       method should only be used to determine what the user is acutally
 *       trying to do.
  */
-func MessageCreate(s *dsg.Session, m *dsg.MessageCreate) ***REMOVED***
+func MessageCreate(s *dsg.Session, m *dsg.MessageCreate) {
 	// The message is checked to see if its a command and can be run
 	canRunCommand, err := canTriggerBot(s, m.Message)
-	if err != nil ***REMOVED***
+	if err != nil {
 		s.ChannelMessageSend(m.ChannelID, "**FATAL. ERROR ENCOUNTERED IN PARSING MESSAGE. DETAILS FOLLOW:**\n"+err.Error()+"\n**CRASHING THE BOT.** *Have a good day!*")
 		panic(-1)
-	***REMOVED***
-	if canRunCommand != true ***REMOVED***
+	}
+	if canRunCommand != true {
 		return
-	***REMOVED***
+	}
 
 	// Removing case sensitivity:
 	messageSanatized := strings.ToLower(m.Content)
@@ -48,10 +48,10 @@ func MessageCreate(s *dsg.Session, m *dsg.MessageCreate) ***REMOVED***
 	// The trailing > is cut off the message so the commands can be more easily handled.
 	msg := strings.SplitAfterN(messageSanatized, f.MyBot.Prefs.Prefix, 2)
 	message := strings.Split(msg[1], " ")
-	flags := a.ParseFlags(message)
+	flags := a.Parse(message) //muchanem: creating error "declared and not used", not needed?
 
 	// Now the message is run to see if its a valid command.
-	switch message[0] ***REMOVED***
+	switch message[0] {
 	case "help":
 		print("aint happenign m8.")
 		//help(s, m, message)
@@ -61,28 +61,28 @@ func MessageCreate(s *dsg.Session, m *dsg.MessageCreate) ***REMOVED***
 		s.ChannelMessageSendEmbed(m.ChannelID, getBotInfo())
 	case "rolelist":
 		run, err := f.HasRole(s, m.Message, "")
-		if err != nil ***REMOVED***
+		if err != nil {
 			errorLong := "Error! Failed to retrieve  Details below:\n```" + err.Error() + "```"
 			s.ChannelMessageSend(m.ChannelID, errorLong)
 			return
-		***REMOVED***
-		if run == false && f.MyBot.Users.ReportPermFails == true ***REMOVED***
+		}
+		if run == false && f.MyBot.Users.ReportPermFails == true {
 			s.ChannelMessageSend(m.ChannelID, "You do not have permission to use that command.")
-		***REMOVED*** else if run == false && f.MyBot.Users.ReportPermFails == false ***REMOVED***
+		} else if run == false && f.MyBot.Users.ReportPermFails == false {
 			return
-		***REMOVED*** else if run == true ***REMOVED***
+		} else if run == true {
 			roles, err := getRoles(m.Message)
-			if err != nil ***REMOVED***
+			if err != nil {
 				errorLong := "Error! Failed to retrieve  Details below:\n```" + err.Error() + "```"
 				s.ChannelMessageSend(m.ChannelID, errorLong)
 				return
-			***REMOVED***
+			}
 			s.ChannelMessageSend(m.ChannelID, roles)
-		***REMOVED***
+		}
 	default:
 		s.ChannelMessageSend(m.ChannelID, "Sorry, I don't understand.")
-	***REMOVED***
-***REMOVED***
+	}
+}
 
 /* # Check if user can run command
 * This switch statment makes sure the bot runs when its triggered and the user has the perms to trigger it.
@@ -99,17 +99,17 @@ func MessageCreate(s *dsg.Session, m *dsg.MessageCreate) ***REMOVED***
 * NOTE: IF THESE CONDITIONS ARE MET THEN NO ERROR WILL BE SENT TO EITHER DISCORD OR LOGGED.
 * THIS IS BY DESIGN. DON'T CHANGE IT THINKING I WAS JUST LAZY.
  */
-func canTriggerBot(s *dsg.Session, m *dsg.Message) (bool, error) ***REMOVED***
-	if m.Author.Bot ***REMOVED***
+func canTriggerBot(s *dsg.Session, m *dsg.Message) (bool, error) {
+	if m.Author.Bot {
 		return false, nil
-	***REMOVED***
+	}
 
 	admin, err := f.HasRole(s, m, "")
-	if err != nil ***REMOVED***
+	if err != nil {
 		return false, err
-	***REMOVED***
+	}
 
-	switch true ***REMOVED***
+	switch true {
 	case m.Author.ID == s.State.User.ID:
 		return false, nil
 	case !strings.HasPrefix(m.Content, f.MyBot.Prefs.Prefix):
@@ -120,18 +120,18 @@ func canTriggerBot(s *dsg.Session, m *dsg.Message) (bool, error) ***REMOVED***
 		return false, nil
 	case f.MyBot.Perms.WhitelistChannels && !f.Contains(f.MyBot.Perms.WhitelistedChannels, m.ChannelID):
 		return false, nil
-	***REMOVED***
-	for _, b := range f.MyBot.Users.BlacklistedRoles ***REMOVED***
+	}
+	for _, b := range f.MyBot.Users.BlacklistedRoles {
 		blacklisted, err := f.HasRole(s, m, b)
-		if err != nil ***REMOVED***
+		if err != nil {
 			return false, err
-		***REMOVED***
-		if blacklisted ***REMOVED***
+		}
+		if blacklisted {
 			return false, nil
-		***REMOVED***
-	***REMOVED***
+		}
+	}
 	return true, nil
-***REMOVED***
+}
 
 /* # Get server roles
 * A g-d impossibility.
@@ -146,50 +146,50 @@ func canTriggerBot(s *dsg.Session, m *dsg.Message) (bool, error) ***REMOVED***
 *
 * NOTE: If you print this into a discord chat, it WILL mention @everyone
  */
-func getRoles(m *dsg.Message) (string, error) ***REMOVED***
+func getRoles(m *dsg.Message) (string, error) {
 	guild, err := f.GetGuild(f.DG, m)
-	if err != nil ***REMOVED***
+	if err != nil {
 		return "", err
-	***REMOVED***
+	}
 	roles, err := f.DG.GuildRoles(guild.ID)
-	if err != nil ***REMOVED***
+	if err != nil {
 		return "", err
-	***REMOVED***
+	}
 	role := "Server role list:\n```\n"
-	for _, r := range roles ***REMOVED***
+	for _, r := range roles {
 		role += "Name: " + r.Name + "; ID: " + r.ID + ";\n"
-	***REMOVED***
+	}
 	role += "```"
 	return role, nil
-***REMOVED***
+}
 
 // Returns a messageEmbed about the bot; its a function because if it was a
 // variable some of the data doesn't work properly.
-func getBotInfo() *dsg.MessageEmbed ***REMOVED***
-	return &dsg.MessageEmbed***REMOVED***
-		Author:      &dsg.MessageEmbedAuthor***REMOVED******REMOVED***,
+func getBotInfo() *dsg.MessageEmbed {
+	return &dsg.MessageEmbed{
+		Author:      &dsg.MessageEmbedAuthor{},
 		Color:       0x073642,
 		Title:       "SkilBot Information",
 		Description: "A list of commands can be brought up with `" + f.MyBot.Prefs.Prefix + "help`.",
-		Thumbnail: &dsg.MessageEmbedThumbnail***REMOVED***
+		Thumbnail: &dsg.MessageEmbedThumbnail{
 			URL:    "https://i.imgur.com/lPTAiFE.png",
 			Width:  64,
 			Height: 64,
-		***REMOVED***,
-		Fields: []*dsg.MessageEmbedField***REMOVED***
-			&dsg.MessageEmbedField***REMOVED***
+		},
+		Fields: []*dsg.MessageEmbedField{
+			&dsg.MessageEmbedField{
 				Name:   "Version",
 				Value:  "Version " + f.MyBot.Prefs.Version + ".",
 				Inline: true,
-			***REMOVED***,
-			&dsg.MessageEmbedField***REMOVED***
+			},
+			&dsg.MessageEmbedField{
 				Name:   "Github Link",
 				Value:  "https://github.com/skilstak/discord-public",
 				Inline: true,
-			***REMOVED***,
-		***REMOVED***,
-	***REMOVED***
-***REMOVED***
+			},
+		},
+	}
+}
 
 /* # Get bot help
 * Overcomplecated for little good reason
@@ -213,6 +213,6 @@ func getBotInfo() *dsg.MessageEmbed ***REMOVED***
 * TODO: Make the help not hard coded. Move into json file? Massive refactor for
 * v5.0-alpha probably.
  */
-//func help(s *dsg.Session, m *dsg.Message, f []*a.Flag) ***REMOVED***
+//func help(s *dsg.Session, m *dsg.Message, f []*a.Flag) {
 
-//***REMOVED***
+//}

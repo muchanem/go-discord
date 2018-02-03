@@ -1,24 +1,24 @@
 package nil
 
 import (
-	f "../foundation"
 	"encoding/json"
+	f "github.com/skilstak/discord-public/lib"
 	"io/ioutil"
 )
 
-func GetBotInfo(path string) (f.BotType, error) ***REMOVED***
+func GetBotInfo(path string) (f.BotType, error) {
 	raw, err0 := ioutil.ReadFile(path)
 	var b f.BotType
 
-	if err0 != nil ***REMOVED***
+	if err0 != nil {
 		return b, err0
-	***REMOVED***
+	}
 
 	err1 := json.Unmarshal(raw, &b)
 
-	if err1 != nil ***REMOVED***
+	if err1 != nil {
 		return b, err1
-	***REMOVED***
+	}
 
 	return b, nil
-***REMOVED***
+}
