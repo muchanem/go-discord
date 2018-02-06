@@ -9,10 +9,9 @@ import (
 	//"time"
 	"github.com/skilstak/discord-public/cmd/commands"
 )
-var cmd = map[string]func ()  {
-	"ping": commands.Ping()
-	"info": commands.Info()
-}
+
+var Cmd = map[string]func(){}
+
 /* # MessageCreate
 * The world's bigest switch statment
 *

@@ -5,7 +5,7 @@ import (
 )
 
 /* # Big Bot Boye
-* This struct is all about the bot, its prefrences, authentication, so on.
+* This struct is all about who the bot is: its prefrences, authentication, etc.
 *
 * The fields are self explanitory so I'm not going to detail them.
 *
@@ -38,6 +38,36 @@ type BotType struct {
 		StaffRoles       []string `json:"staffRoles"`
 		StandardRoles    []string `json:"standardUser"`
 	} `json:"users"`
+}
+
+/* Defines the actual action the bot takes
+* This is a key component of the Command struct, it is the actual *thing* that
+* the command does when it is run. This can be as simple as printing a string
+* or embed to discord or even be a wrapper for a massive series of functions
+* for your discord-based RPG.
+*
+* Parameters:
+* - session (*discordgo.Session) The bot session, in case you need to pull data
+*	from about discord itself to complete your task
+* - session (*discordgo.Message) The entire message that triggered the command
+*	this includes the prefix and command itself. You will have to parse out
+*	flags and clean the input.
+*
+* NOTE: THIS DOES NOT RETURN ERRORS. YOU MUST HANDLE ERRORS.
+ */
+type Action func(session *dsg.Session, message *dsg.Message)
+
+/* Defines static data about commands the bot runs.
+* This is a very large structure that defines all the needed bits for a bot
+* command. All bot modules MUST have one of these along with a few outher key
+* components so that the bot works.
+ */
+type Command struct {
+	Name    string   `json:"name"`
+	Usage   string   `json:"usage"`
+	Help    string   `json:"help"`
+	Action  Action   `json:"-"`
+	Aliases []string `json:"aliases"`
 }
 
 /* # Get the guild a message was sent in.
