@@ -7,10 +7,35 @@ import (
 	a "github.com/skilstak/discord-public/flags" // muchanem: only used within the "flags variabe (line 51)" and the commented help variable
 	"strings"
 	//"time"
-	"github.com/skilstak/discord-public/cmd/commands"
+	"github.com/skilstak/discord-public/cmd/commands/ping"
+	"github.com/skilstak/discord-public/cmd/commands/info"
 )
 
-var Cmd = map[string]func(){}
+var Cmd = make(map[string]*f.Command{})
+
+/* FOR THE PERSON RUNNING THIS BOT: Adding packages to the command list
+* As of now, the bot has no commands set to it so while it may boot up, it
+* won't actually do anything. You will need to add the maps of the command
+* modules you have imported or made into the main Cmd map. To do this, add
+* each of the command's public map[string]*f.Command type into the following
+* init statment. 2 commands, `info` and `ping` have already been added to help
+* show what you need to do:
+*/
+
+init(
+	for key, value := range ping.Commands {
+		Cmd[key] = value
+	}
+	for key, value := range info.Commands {
+		Cmd[key] = value
+	}
+	//for key, value := range IMPORTNAMEHERE.Commands {
+	//        Cmd[key] = value
+	//}
+)
+
+//----------------------------------------------------------------------------------//
+
 
 /* # MessageCreate
 * The world's bigest switch statment
