@@ -4,7 +4,6 @@ import (
 	dsg "github.com/bwmarrin/discordgo"
 	f "github.com/skilstak/discord-public/lib"
 	//	"strconv"
-	// muchanem: only used within the "flags variabe (line 51)" and the commented help variable
 	//"time"
 )
 
