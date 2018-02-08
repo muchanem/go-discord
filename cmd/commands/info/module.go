@@ -3,8 +3,6 @@ package commands
 import (
 	dsg "github.com/bwmarrin/discordgo"
 	f "github.com/skilstak/discord-public/lib"
-	//	"strconv"
-	//"time"
 )
 
 var Commands = make(map[string]*f.Command)
@@ -21,7 +19,7 @@ func init() {
 	}
 }
 
-func info(s *dsg.Session, m *dsg.MessageCreate) {
+func Action(session *dsg.Session, message *dsg.MessageCreate) {
 	s.ChannelMessageSendEmbed(m.ChannelID, getBotInfo())
 }
 func getBotInfo() *dsg.MessageEmbed {

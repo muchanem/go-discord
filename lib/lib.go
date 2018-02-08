@@ -55,7 +55,7 @@ type BotType struct {
 *
 * NOTE: THIS DOES NOT RETURN ERRORS. YOU MUST HANDLE ERRORS.
  */
-type Action func(session *dsg.Session, message *dsg.Message)
+type Action func(session *dsg.Session, message *dsg.MessageCreate)
 
 /* Defines static data about commands the bot runs.
 * This is a very large structure that defines all the needed bits for a bot
