@@ -2,11 +2,10 @@ package nil
 
 import (
 	dsg "github.com/bwmarrin/discordgo"
-	f "github.com/skilstak/discord-public/lib"
-	//	"strconv"
 	info "github.com/skilstak/discord-public/cmd/commands/info"
 	ping "github.com/skilstak/discord-public/cmd/commands/ping"
-	//a "github.com/skilstak/discord-public/flags" // muchanem: only used within the "flags variabe (line 51)" and the commented help variable
+	"github.com/skilstak/discord-public/dat"
+	f "github.com/skilstak/discord-public/lib"
 	"strings"
 )
 
@@ -61,8 +60,7 @@ func MessageCreate(s *dsg.Session, m *dsg.MessageCreate) {
 	// The message is checked to see if its a command and can be run
 	canRunCommand, err := canTriggerBot(s, m.Message)
 	if err != nil {
-		s.ChannelMessageSend(m.ChannelID, "**FATAL. ERROR ENCOUNTERED IN PARSING MESSAGE. DETAILS FOLLOW:**\n```"+err.Error()+"```\n**CRASHING THE BOT.** *Have a good day!*")
-		panic(-1)
+		dat.Panic(s, m, err.Error(), true)
 	}
 	if canRunCommand != true {
 		return

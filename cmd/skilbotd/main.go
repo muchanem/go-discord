@@ -5,7 +5,7 @@ import (
 	"fmt"
 	dsg "github.com/bwmarrin/discordgo"
 	cmd "github.com/skilstak/discord-public/cmd/commandHandler"
-	jsd "github.com/skilstak/discord-public/json"
+	"github.com/skilstak/discord-public/dat"
 	f "github.com/skilstak/discord-public/lib"
 	c "github.com/skilstak/go-colors"
 	"os"
@@ -23,7 +23,7 @@ func init() {
 }
 
 func main() {
-	bot, err := jsd.GetBotInfo(FilePath + "preferences.json")
+	bot, err := jsd.GetBotInfo(FilePath + "staticData/preferences.json")
 	fmt.Println(c.B0 + "Reading bot prefrences file...")
 	if err != nil {
 		fmt.Println(c.R + "Unable to read prefrences file. Exiting program." + c.X)
