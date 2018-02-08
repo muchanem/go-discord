@@ -2,6 +2,7 @@ package commands
 
 import (
 	dsg "github.com/bwmarrin/discordgo"
+	//"github.com/skilstak/discord-public/dat"
 	f "github.com/skilstak/discord-public/lib"
 )
 
@@ -22,6 +23,7 @@ func init() {
 func info(session *dsg.Session, message *dsg.MessageCreate) {
 	session.ChannelMessageSendEmbed(message.ChannelID, getBotInfo())
 }
+
 func getBotInfo() *dsg.MessageEmbed {
 	return &dsg.MessageEmbed{
 		Author:      &dsg.MessageEmbedAuthor{},

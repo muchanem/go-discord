@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	dsg "github.com/bwmarrin/discordgo"
 	cmd "github.com/skilstak/discord-public/cmd/commandHandler"
@@ -13,17 +12,8 @@ import (
 	"syscall"
 )
 
-var (
-	DataPath string
-)
-
-func init() {
-	flag.StringVar(&DataPath, "f", "", "Path to directory where the bot can store and work with data.")
-	flag.Parse()
-}
-
 func main() {
-	bot, err := jsd.GetBotInfo(FilePath + "staticData/preferences.json")
+	bot, err := dat.GetBotInfo()
 	fmt.Println(c.B0 + "Reading bot prefrences file...")
 	if err != nil {
 		fmt.Println(c.R + "Unable to read prefrences file. Exiting program." + c.X)

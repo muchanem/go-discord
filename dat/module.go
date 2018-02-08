@@ -1,10 +1,12 @@
-package nil
+package dat
 
 import (
+	"bytes"
 	"encoding/json"
 	"flag"
 	dsg "github.com/bwmarrin/discordgo"
 	f "github.com/skilstak/discord-public/lib"
+	"io"
 	"io/ioutil"
 	"log"
 	"os"
@@ -13,23 +15,23 @@ import (
 )
 
 var (
-	time   string
-	path   string
-	logger *log.Logger
+	currentTime string
+	path        string
+	logger      *log.Logger
 )
 
 func init() {
 	flag.StringVar(&path, "p", "./dat", "Path to directory where the bot can store and work with data")
 	flag.Parse()
 
-	time = time.Now().Format("2006-01-02@15:04:05")
+	currentTime = time.Now().Format("2006-01-02@15h04m05s")
 
-	file, err := os.Create(logpath + "logs/system-logs@" + time + ".log")
+	file, err := os.Create(path + "logs/system-logs@" + currentTime + ".log")
 	if err != nil {
 		panic(err)
 	}
 
-	logger = log.New(file, "", Ldate|Ltime|Llongfile|LUTC)
+	logger = log.New(file, "", log.Ldate|log.Ltime|log.Llongfile|log.LUTC)
 }
 
 var lock sync.Mutex
@@ -44,10 +46,12 @@ func Save(fileName string, v interface{}) error {
 	}
 	defer file.Close()
 
-	reader, err := json.MarshalIndent(v, "", "\t")
+	b, err := json.MarshalIndent(v, "", "\t")
 	if err != nil {
 		return err
 	}
+
+	reader := bytes.NewReader(b)
 
 	_, err = io.Copy(file, reader)
 
@@ -68,7 +72,7 @@ func Load(fileName string, v interface{}) error {
 }
 
 func GetBotInfo() (f.BotType, error) {
-	raw, err0 := ioutil.ReadFile(path)
+	raw, err := ioutil.ReadFile(path + "staticData/preferences.json")
 	var b f.BotType
 
 	if err != nil {
@@ -105,9 +109,9 @@ func GetBotInfo() (f.BotType, error) {
 * Nothing. Please just put an empty return statment after your call.
  */
 func Panic(s *dsg.Session, m *dsg.MessageCreate, err string, fatal bool) {
-	s.ChannelMessageSend(m.ChannelID, "**ERROR ENCOUNTERED. DETAILS FOLLOW:**\n```"+err.Error()+"```\nThis incident will be reported.")
+	s.ChannelMessageSend(m.ChannelID, "**ERROR ENCOUNTERED. DETAILS FOLLOW:**\n```"+err+"```\nThis incident will be reported.")
 	if fatal {
-		s.ChannelMessageSend(m.ChannelID, "The bot is now \"gracefully\" force quitting, however it might fail to close out of its session with discord and may still apear online.\n*Have a good day!*")
+		s.ChannelMessageSend(m.ChannelID, "The bot is now \"gracefully\" force quitting, however it might fail to close out of its session with discord and may still apear online.\n\n*Have a good day!*")
 		s.Close()
 		logger.Fatalln(err)
 	} else {
