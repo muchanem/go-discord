@@ -4,11 +4,10 @@ import (
 	dsg "github.com/bwmarrin/discordgo"
 	f "github.com/skilstak/discord-public/lib"
 	//	"strconv"
-	a "github.com/skilstak/discord-public/flags" // muchanem: only used within the "flags variabe (line 51)" and the commented help variable
-	"strings"
-	//"time"
 	"github.com/skilstak/discord-public/cmd/commands/info"
 	"github.com/skilstak/discord-public/cmd/commands/ping"
+	a "github.com/skilstak/discord-public/flags" // muchanem: only used within the "flags variabe (line 51)" and the commented help variable
+	"strings"
 )
 
 var Cmd = map[string]*f.Command{}

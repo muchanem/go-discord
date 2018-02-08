@@ -17,11 +17,11 @@ func init() {
 		 -e : Get info as embed (default)
 		 -t : Get info as raw text
 		 -m : Get info via direct message`,
-		Action: Info(),
+		Action: info,
 	}
 }
 
-func Info(s *dsg.Session, m *dsg.MessageCreate) {
+func info(s *dsg.Session, m *dsg.MessageCreate) {
 	s.ChannelMessageSendEmbed(m.ChannelID, getBotInfo())
 }
 func getBotInfo() *dsg.MessageEmbed {
