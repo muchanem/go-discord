@@ -7,11 +7,11 @@ import (
 	a "github.com/skilstak/discord-public/flags" // muchanem: only used within the "flags variabe (line 51)" and the commented help variable
 	"strings"
 	//"time"
-	"github.com/skilstak/discord-public/cmd/commands/ping"
 	"github.com/skilstak/discord-public/cmd/commands/info"
+	"github.com/skilstak/discord-public/cmd/commands/ping"
 )
 
-var Cmd = make(map[string]*f.Command{})
+var Cmd = map[string]*f.Command{}
 
 /* FOR THE PERSON RUNNING THIS BOT: Adding packages to the command list
 * As of now, the bot has no commands set to it so while it may boot up, it
@@ -20,9 +20,9 @@ var Cmd = make(map[string]*f.Command{})
 * each of the command's public map[string]*f.Command type into the following
 * init statment. 2 commands, `info` and `ping` have already been added to help
 * show what you need to do:
-*/
+ */
 
-init(
+func init() {
 	for key, value := range ping.Commands {
 		Cmd[key] = value
 	}
@@ -32,10 +32,9 @@ init(
 	//for key, value := range IMPORTNAMEHERE.Commands {
 	//        Cmd[key] = value
 	//}
-)
+}
 
 //----------------------------------------------------------------------------------//
-
 
 /* # MessageCreate
 * The world's bigest switch statment
@@ -63,7 +62,7 @@ func MessageCreate(s *dsg.Session, m *dsg.MessageCreate) {
 	// The message is checked to see if its a command and can be run
 	canRunCommand, err := canTriggerBot(s, m.Message)
 	if err != nil {
-		s.ChannelMessageSend(m.ChannelID, "**FATAL. ERROR ENCOUNTERED IN PARSING MESSAGE. DETAILS FOLLOW:**\n"+err.Error()+"\n**CRASHING THE BOT.** *Have a good day!*")
+		s.ChannelMessageSend(m.ChannelID, "**FATAL. ERROR ENCOUNTERED IN PARSING MESSAGE. DETAILS FOLLOW:**\n```"+err.Error()+"```\n**CRASHING THE BOT.** *Have a good day!*")
 		panic(-1)
 	}
 	if canRunCommand != true {
@@ -76,39 +75,17 @@ func MessageCreate(s *dsg.Session, m *dsg.MessageCreate) {
 	// The trailing > is cut off the message so the commands can be more easily handled.
 	msg := strings.SplitAfterN(messageSanatized, f.MyBot.Prefs.Prefix, 2)
 	message := strings.Split(msg[1], " ")
-	flags := a.Parse(message) //muchanem: creating error "declared and not used", not needed?
 
-	// Now the message is run to see if its a valid command.
-	switch message[0] {
-	case "help":
-		print("aint happenign m8.")
-		//help(s, m, message)
-	case "ping":
-		s.ChannelMessageSend(m.ChannelID, "Pong!")
-	case "info":
-		s.ChannelMessageSendEmbed(m.ChannelID, getBotInfo())
-	case "rolelist":
-		run, err := f.HasRole(s, m.Message, "")
-		if err != nil {
-			errorLong := "Error! Failed to retrieve  Details below:\n```" + err.Error() + "```"
-			s.ChannelMessageSend(m.ChannelID, errorLong)
-			return
+	// Now the message is run to see if its a valid command and acted upon.
+	didAThing := false
+	for command, action := range Cmd {
+		if message[0] == command {
+			action.Action(s, m.Message)
+			didAThing = true
 		}
-		if run == false && f.MyBot.Users.ReportPermFails == true {
-			s.ChannelMessageSend(m.ChannelID, "You do not have permission to use that command.")
-		} else if run == false && f.MyBot.Users.ReportPermFails == false {
-			return
-		} else if run == true {
-			roles, err := getRoles(m.Message)
-			if err != nil {
-				errorLong := "Error! Failed to retrieve  Details below:\n```" + err.Error() + "```"
-				s.ChannelMessageSend(m.ChannelID, errorLong)
-				return
-			}
-			s.ChannelMessageSend(m.ChannelID, roles)
-		}
-	default:
-		s.ChannelMessageSend(m.ChannelID, "Sorry, I don't understand.")
+	}
+	if didAThing == false {
+		s.ChannelMessageSend(m.ChannelID, "Sorry <@"+m.Message.Author.ID+">, but I don't know what you mean by \"`"+m.Message.Content+"`\".")
 	}
 }
 

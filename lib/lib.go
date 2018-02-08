@@ -63,11 +63,9 @@ type Action func(session *dsg.Session, message *dsg.Message)
 * components so that the bot works.
  */
 type Command struct {
-	Name    string   `json:"name"`
-	Usage   string   `json:"usage"`
-	Help    string   `json:"help"`
-	Action  Action   `json:"-"`
-	Aliases []string `json:"aliases"`
+	Name   string `json:"name"`
+	Help   string `json:"help"`
+	Action Action `json:"-"`
 }
 
 /* # Get the guild a message was sent in.

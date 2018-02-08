@@ -2,11 +2,19 @@ package commands
 
 import (
 	dsg "github.com/bwmarrin/discordgo"
-	//	"strconv"
-	// muchanem: only used within the "flags variabe (line 51)" and the commented help variable
-	//"time"
+	f "github.com/skilstak/discord-public/lib"
 )
 
-func ping(s *dsg.Session, m *dsg.MessageCreate) {
+var Command = make(map[string]*f.Command)
+
+func init() {
+	Command = &f.Command{
+		Name:   "Ping",
+		Help:   "Pings the system to see if its online.",
+		Action: Ping,
+	}
+}
+
+func Ping(s *dsg.Session, m *dsg.MessageCreate) {
 	s.ChannelMessageSend(m.ChannelID, "Pong!")
 }
