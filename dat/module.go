@@ -113,7 +113,7 @@ func Panic(s *dsg.Session, m *dsg.MessageCreate, err string, fatal bool) {
 	if fatal {
 		s.ChannelMessageSend(m.ChannelID, "The bot is now \"gracefully\" force quitting, however it might fail to close out of its session with discord and may still apear online.\n\n*Have a good day!*")
 		s.Close()
-		logger.Fatalln(err)
+		logger.Fatalln("FATAL! " + err)
 	} else {
 		logger.Println(err)
 	}
