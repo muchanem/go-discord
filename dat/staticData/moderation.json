@@ -1,0 +1,27 @@
+{
+  "perms": {
+    "whitelistChannels": false,
+    "whitelistedChannels": [
+      "[put a channel ID (not a #channel) here]"
+    ],
+    "blacklistedChannels": [
+      "[put a channel ID (not a #channel) here]"
+    ]
+  },
+  "users": {
+    "roleWhitelist":false,
+    "reportPermissionFailures":false,
+    "blacklistedRoles": [
+      ""
+    ],
+    "adminRoles": [
+      "[put a user ID (not a @username#1234) here]"
+    ],
+    "staffRoles": [
+      ""
+    ],
+    "standardRoles": [
+      ""
+    ]
+  }
+}

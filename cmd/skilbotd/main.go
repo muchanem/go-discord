@@ -14,16 +14,16 @@ import (
 )
 
 var (
-	FilePath string
+	DataPath string
 )
 
 func init() {
-	flag.StringVar(&FilePath, "f", "", "Path to json file containing bot info")
+	flag.StringVar(&DataPath, "f", "", "Path to directory where the bot can store and work with data.")
 	flag.Parse()
 }
 
 func main() {
-	bot, err := jsd.GetBotInfo(FilePath)
+	bot, err := jsd.GetBotInfo(FilePath + "preferences.json")
 	fmt.Println(c.B0 + "Reading bot prefrences file...")
 	if err != nil {
 		fmt.Println(c.R + "Unable to read prefrences file. Exiting program." + c.X)
