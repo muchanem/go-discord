@@ -19,8 +19,8 @@ func init() {
 	}
 }
 
-func Action(session *dsg.Session, message *dsg.MessageCreate) {
-	s.ChannelMessageSendEmbed(m.ChannelID, getBotInfo())
+func info(session *dsg.Session, message *dsg.MessageCreate) {
+	session.ChannelMessageSendEmbed(message.ChannelID, getBotInfo())
 }
 func getBotInfo() *dsg.MessageEmbed {
 	return &dsg.MessageEmbed{

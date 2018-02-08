@@ -11,10 +11,10 @@ func init() {
 	Command = &f.Command{
 		Name:   "Ping",
 		Help:   "Pings the system to see if its online.",
-		Action: Action,
+		Action: ping,
 	}
 }
 
-func Action(session *dsg.Session, message *dsg.MessageCreate) {
-	s.ChannelMessageSend(m.ChannelID, "Pong!")
+func ping(session *dsg.Session, message *dsg.MessageCreate) {
+	session.ChannelMessageSend(message.ChannelID, "Pong!")
 }
