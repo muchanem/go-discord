@@ -5,10 +5,10 @@ import (
 	f "github.com/skilstak/discord-public/lib"
 )
 
-var Command = make(map[string]*f.Command)
+var Commands = make(map[string]*f.Command)
 
 func init() {
-	Command = &f.Command{
+	Commands["ping"] = &f.Command{
 		Name:   "Ping",
 		Help:   "Pings the system to see if its online.",
 		Action: ping,

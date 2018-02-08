@@ -4,9 +4,9 @@ import (
 	dsg "github.com/bwmarrin/discordgo"
 	f "github.com/skilstak/discord-public/lib"
 	//	"strconv"
-	"github.com/skilstak/discord-public/cmd/commands/info"
-	"github.com/skilstak/discord-public/cmd/commands/ping"
-	a "github.com/skilstak/discord-public/flags" // muchanem: only used within the "flags variabe (line 51)" and the commented help variable
+	info "github.com/skilstak/discord-public/cmd/commands/info"
+	ping "github.com/skilstak/discord-public/cmd/commands/ping"
+	//a "github.com/skilstak/discord-public/flags" // muchanem: only used within the "flags variabe (line 51)" and the commented help variable
 	"strings"
 )
 
@@ -79,12 +79,18 @@ func MessageCreate(s *dsg.Session, m *dsg.MessageCreate) {
 	didAThing := false
 	for command, action := range Cmd {
 		if message[0] == command {
-			action.Action(s, m.Message)
+			action.Action(s, m)
 			didAThing = true
 		}
 	}
 	if didAThing == false {
-		s.ChannelMessageSend(m.ChannelID, "Sorry <@"+m.Message.Author.ID+">, but I don't know what you mean by \"`"+m.Message.Content+"`\".")
+		if strings.Contains(m.Message.Content, "@everyone") {
+			s.ChannelMessageSend(m.ChannelID, "Sorry <@"+m.Message.Author.ID+">, but I don't understand what you're saying.\nI'm also not going to @'ing everyone over it so don't bother trying.")
+		} else if strings.Contains(m.Message.Content, "@here") {
+			s.ChannelMessageSend(m.ChannelID, "Sorry <@"+m.Message.Author.ID+">, but I don't understand what you're saying.\nI'm also not going to be tricked into @'ing here over it so don't bother trying.")
+		} else {
+			s.ChannelMessageSend(m.ChannelID, "Sorry <@"+m.Message.Author.ID+">, but I don't know what you mean by \"`"+m.Message.Content+"`\".")
+		}
 	}
 }
 
