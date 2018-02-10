@@ -60,7 +60,9 @@ func MessageCreate(s *dsg.Session, m *dsg.MessageCreate) {
 	// The message is checked to see if its a command and can be run
 	canRunCommand, err := canTriggerBot(s, m.Message)
 	if err != nil {
-		dat.Panic(s, m, err.Error(), true)
+		dat.Log(err, 0)
+		s.ChannelMessageSend(m.ChannelID, "Hi there, <@"+m.Author.ID+">. I don't know if you meant to trigger me but I'm always in the background reading messages and yours was a little... weird to me. Could you please inform a server mod or admin about this? I'll regurgitate the error I got here:\n```"+err.Error()+"```\n. Hopefully someone can make something of it because I sure can't.")
+		return
 	}
 	if canRunCommand != true {
 		return
@@ -101,8 +103,9 @@ func MessageCreate(s *dsg.Session, m *dsg.MessageCreate) {
 * - Bot whitelists channels and the command was run in a channel not on the whitelist.
 * - Users with a blacklisted role from running the bot
 *
-* NOTE: Users who have "admin" roles (according to the bot's json data)
-*       will have the abilityto run commands regardless of any other rules
+* NOTE: Users who have "admin" roles (according to the bot's json data) or
+*       permissions will have the ability to run commands regardless of any
+*       other rules
 *
 * NOTE: IF THESE CONDITIONS ARE MET THEN NO ERROR WILL BE SENT TO EITHER DISCORD OR LOGGED.
 * THIS IS BY DESIGN. DON'T CHANGE IT THINKING I WAS JUST LAZY.

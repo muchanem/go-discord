@@ -16,7 +16,7 @@ func main() {
 	bot, err := dat.GetBotInfo()
 	fmt.Println(c.B0 + "Reading bot prefrences file...")
 	if err != nil {
-		fmt.Println(c.R + "Unable to read prefrences file. Exiting program." + c.X)
+		dat.Log(err, -1)
 		panic(err)
 	} else {
 		fmt.Println(c.G + "Bot prefrences recived.")
@@ -46,8 +46,8 @@ func runBot(username string, secret string, id string, token string) *dsg.Sessio
 	dg, err := dsg.New("Bot " + token)
 
 	if err != nil {
-		fmt.Println(c.R+"Error in creating discord session. Exiting program."+c.X, err)
-		os.Exit(-1)
+		dat.Log(err, -1)
+		panic(err)
 	} else {
 		fmt.Println(c.G + "Session successfuly created.")
 	}
@@ -58,8 +58,8 @@ func runBot(username string, secret string, id string, token string) *dsg.Sessio
 	fmt.Println(c.B0 + "Opening websocket to Discord...")
 	err = dg.Open()
 	if err != nil {
-		fmt.Println(c.R+"Error opening websocket to Discord. Exiting program."+c.X, err)
-		os.Exit(-1)
+		dat.Log(err, -1)
+		panic(err)
 	} else {
 		fmt.Println(c.G + "Socket successfully opened.")
 	}
