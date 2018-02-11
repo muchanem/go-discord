@@ -17,34 +17,20 @@ import (
 var (
 	currentTime string
 	path        string
-	stdlog      *log.Logger
-	errlog      *log.Logger
-	mfulog      *log.Logger
+	Log         *log.Logger
 )
 
 func init() {
-	flag.StringVar(&path, "p", "./dat", "Path to directory where the bot can store and work with data")
+	flag.StringVar(&path, "p", "./dat", "Path to directory where the bot can store and work with data.")
 	flag.Parse()
 
 	currentTime = time.Now().Format("2006-01-02@15h04m")
 
-	file, err := os.Create(path + "logs/general-logs@" + currentTime + ".log")
+	file, err := os.Create(path + "logs/botlogs@" + currentTime + ".log")
 	if err != nil {
 		panic(err)
 	}
-	stdlog = log.New(file, "", log.Ldate|log.Ltime|log.Llongfile|log.LUTC)
-
-	file, err = os.Create(path + "logs/error-logs@" + currentTime + ".log")
-	if err != nil {
-		panic(err)
-	}
-	errlog = log.New(file, "", log.Ldate|log.Ltime|log.Llongfile|log.LUTC)
-
-	file, err = os.Create(path + "logs/mfu-logs@" + currentTime + ".log")
-	if err != nil {
-		panic(err)
-	}
-	mfulog = log.New(file, "", log.Ldate|log.Ltime|log.Llongfile|log.LUTC)
+	Log = log.New(file, "", log.Ldate|log.Ltime|log.Llongfile|log.LUTC)
 }
 
 var lock sync.Mutex
@@ -101,40 +87,23 @@ func GetBotInfo() (f.BotType, error) {
 	return b, nil
 }
 
-/* Universal error logger
-* Log() is a logger wrapper for the whole bot to use for logging events that
-* happen. This can range from minor command permission failures to massive json
-* data extraction issues. This helps the people running the bot understand
-* whats going wrong and who they need to write to about it.
+/* # Alerts discord of errors.
+* AlertDiscord is a function that... well alerts discord if there's a problem.
+* Useful for things like if your command fails and you have to return, the user
+* isn't kept in limbo waiting for something to happen. However this is not a
+* substitute for posting an error in the log and should be done *along with*
+* dat.Log.New(), this just helps prevent the users moaning about "broken bot"
+* and actually proves it to them.
 *
 * Parameters:
-* - err (type error) : The event to be logged. This directly calls err.Error()
-* - priority (type int) : The priority of the error. While all events should be
-*			  logged, some are actually important while others can
-*			  be treated as "this certainly did happen". More
-*			  important errors are also logged in their own file
-*
-* priority > 0 : Nothing out of the ordinary. Will not be noted apart from
-*		 being put in the standard-log.log file (stdlog)
-* priority = 0 : A minor error that forces a command to halt but does not
-*		 affect the rest of the system. Will be put in error-log.log
-*		 and given a "priority" prefix in stdlog.
-* priority < 0 : A major failure that could be recovered from but might also
-*		 force the system to crash. These will be put in mfu-log.log
-*		 and given a "DANGER" prefix in stdlog
-*
+* - s (type *discordgo.Session) : Needed for posting a message
+* - m (type *discordgo.Message) : Needed for posting a message. Pings .Author.
+* - err (type error) : The error being reported
  */
-func Log(err error, priority int) {
-	if priority > 0 {
-		stdlog.Println(err.Error())
-	} else if priority == 0 {
-		stdlog.Println("Priority: " + err.Error())
-		errlog.Println(err.Error())
-	} else if priority < 0 {
-		stdlog.Println("DANGER: " + err.Error())
-		mfulog.Println(err.Error())
-	} else {
-		stdlog.Println("DANGER: Log.priority (type int) index out of range.")
-		mfulog.Println("Log.priority (type int) index out of range.")
-	}
+func AlertDiscord(s *dsg.Session, m *dsg.MessageCreate, err error) {
+	str := `<@` + m.Author.ID + `> | Error encountered, details as follows:
+	` + "\n```" + err.Error() + "```\n" + `
+	You are being pinged because your message was the message that triggered the
+	above error. Please inform the person running this bot or a sever admin.`
+	s.MessageSend(m.ChannelID, str)
 }
