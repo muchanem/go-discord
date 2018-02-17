@@ -1,7 +1,7 @@
 package info
 
 import (
-	"errors"
+	//"errors"
 	dsg "github.com/bwmarrin/discordgo"
 	f "github.com/skilstak/go-discord"
 	"github.com/skilstak/go-discord/dat"
@@ -37,12 +37,16 @@ func init() {
 }
 
 func info(session *dsg.Session, message *dsg.MessageCreate) {
-	f1 := strings.ToLower(message.Content)
-	//dat.Log.Println(errors.New("Received f1. As follows:\"" + f1 + "\"."))
-	f2 := strings.SplitAfterN(f1, f.MyBot.Prefs.Prefix+"info ", 1)
-	//dat.Log.Println(errors.New("Received f2. As follows:\"" + f2[1] + "\"."))
-	f3 := strings.Split(f2[1], " ")
+	/*
+		f1 := strings.ToLower(message.Content)
+		//dat.Log.Println(errors.New("Received f1. As follows:\"" + f1 + "\"."))
+		f2 := strings.SplitAfterN(f1, f.MyBot.Prefs.Prefix+"info", 1)
+		//dat.Log.Println(errors.New("Received f2. As follows:\"" + f2[1] + "\"."))
+	*/
+	f3 := strings.Split(message.Content, " ")
 	//dat.Log.Println(errors.New("Received f3. As follows:\"" + f3[0] + "\"."))
+
+	dat.Log.Printf("Note that the split has a length of `%v`.", len(f3))
 
 	flg := flags.Parse(f3)
 	dat.Log.Printf("Note that flag has a length of `%v`.", len(flg))
