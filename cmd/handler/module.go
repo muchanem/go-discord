@@ -2,10 +2,10 @@ package cmd
 
 import (
 	dsg "github.com/bwmarrin/discordgo"
-	info "github.com/skilstak/discord-public/cmd/commands/info"
-	ping "github.com/skilstak/discord-public/cmd/commands/ping"
-	"github.com/skilstak/discord-public/dat"
-	f "github.com/skilstak/discord-public/lib"
+	"github.com/skilstak/go-discord/cmd/commands/info"
+	"github.com/skilstak/go-discord/cmd/commands/ping"
+	"github.com/skilstak/go-discord/dat"
+	f "github.com/skilstak/go-discord/lib"
 	"strings"
 )
 

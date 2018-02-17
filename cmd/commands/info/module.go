@@ -1,11 +1,11 @@
-package commands
+package info
 
 import (
 	"errors"
 	dsg "github.com/bwmarrin/discordgo"
-	"github.com/skilstak/discord-public/dat"
-	"github.com/skilstak/discord-public/flags"
-	f "github.com/skilstak/discord-public/lib"
+	f "github.com/skilstak/go-discord"
+	"github.com/skilstak/go-discord/dat"
+	"github.com/skilstak/go-discord/flags"
 	"strings"
 )
 

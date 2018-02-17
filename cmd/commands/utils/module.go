@@ -1,8 +1,8 @@
-package commands
+package utils
 
 import (
 	dsg "github.com/bwmarrin/discordgo"
-	f "github.com/skilstak/discord-public/lib"
+	f "github.com/skilstak/go-discord/lib"
 )
 
 var Commands = make(map[string]*f.Command)
