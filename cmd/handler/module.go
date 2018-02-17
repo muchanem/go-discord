@@ -2,10 +2,10 @@ package cmd
 
 import (
 	dsg "github.com/bwmarrin/discordgo"
+	f "github.com/skilstak/go-discord"
 	"github.com/skilstak/go-discord/cmd/commands/info"
 	"github.com/skilstak/go-discord/cmd/commands/ping"
 	"github.com/skilstak/go-discord/dat"
-	f "github.com/skilstak/go-discord/lib"
 	"strings"
 )
 
@@ -60,7 +60,7 @@ func MessageCreate(s *dsg.Session, m *dsg.MessageCreate) {
 	// The message is checked to see if its a command and can be run
 	canRunCommand, err := canTriggerBot(s, m.Message)
 	if err != nil {
-		dat.Log(err, 0)
+		dat.Log.Println(err.Error())
 		s.ChannelMessageSend(m.ChannelID, "Hi there, <@"+m.Author.ID+">. I don't know if you meant to trigger me but I'm always in the background reading messages and yours was a little... weird to me. Could you please inform a server mod or admin about this? I'll regurgitate the error I got here:\n```"+err.Error()+"```\n. Hopefully someone can make something of it because I sure can't.")
 		return
 	}

@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"flag"
-	//dsg "github.com/bwmarrin/discordgo"
+	dsg "github.com/bwmarrin/discordgo"
 	f "github.com/skilstak/go-discord"
 	"io"
 	"io/ioutil"
@@ -105,5 +105,5 @@ func AlertDiscord(s *dsg.Session, m *dsg.MessageCreate, err error) {
 	` + "\n```" + err.Error() + "```\n" + `
 	You are being pinged because your message was the message that triggered the
 	above error. Please inform the person running this bot or a sever admin.`
-	s.MessageSend(m.ChannelID, str)
+	s.ChannelMessageSend(m.ChannelID, str)
 }

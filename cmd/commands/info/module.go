@@ -39,7 +39,7 @@ func init() {
 func info(session *dsg.Session, message *dsg.MessageCreate) {
 	f1 := strings.ToLower(message.Content)
 	f2 := strings.SplitAfterN(f1, f.MyBot.Prefs.Prefix+"info", 2)
-	dat.Log(errors.New("Recived f2. As follows:"+f2[1]+"."), 0)
+	dat.Log.Println(errors.New("Recived f2. As follows:"+f2[1]+"."), 0)
 	f3 := strings.Split(f2[1], " ")
 
 	e := false

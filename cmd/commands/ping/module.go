@@ -2,7 +2,7 @@ package ping
 
 import (
 	dsg "github.com/bwmarrin/discordgo"
-	f "github.com/skilstak/go-discord/lib"
+	f "github.com/skilstak/go-discord"
 )
 
 var Commands = make(map[string]*f.Command)
