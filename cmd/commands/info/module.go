@@ -38,14 +38,15 @@ func init() {
 
 func info(session *dsg.Session, message *dsg.MessageCreate) {
 	f1 := strings.ToLower(message.Content)
-	dat.Log.Println(errors.New("Received f1. As follows:\"" + f1 + "\"."))
-	f2 := strings.SplitAfterN(f1, f.MyBot.Prefs.Prefix+"info", 2)
-	dat.Log.Println(errors.New("Received f2. As follows:\"" + f2[1] + "\"."))
+	//dat.Log.Println(errors.New("Received f1. As follows:\"" + f1 + "\"."))
+	f2 := strings.SplitAfterN(f1, f.MyBot.Prefs.Prefix+"info ", 1)
+	//dat.Log.Println(errors.New("Received f2. As follows:\"" + f2[1] + "\"."))
 	f3 := strings.Split(f2[1], " ")
-	dat.Log.Println(errors.New("Received f3. As follows:\"" + f3 + "\"."))
+	//dat.Log.Println(errors.New("Received f3. As follows:\"" + f3[0] + "\"."))
 
-	f := flags.Parse(f3)
-	for _, myflags := range f {
+	flg := flags.Parse(f3)
+	dat.Log.Printf("Note that flag has a length of `%v`.", len(flg))
+	for _, myflags := range flg {
 		if myflags.Type == flags.Dash && myflags.Name == "e" {
 			cfg.embed = true
 		} else if myflags.Type == flags.Dash && myflags.Name == "t" {
