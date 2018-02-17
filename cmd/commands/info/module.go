@@ -38,63 +38,33 @@ func init() {
 
 func info(session *dsg.Session, message *dsg.MessageCreate) {
 	f1 := strings.ToLower(message.Content)
+	dat.Log.Println(errors.New("Received f1. As follows:\"" + f1 + "\"."))
 	f2 := strings.SplitAfterN(f1, f.MyBot.Prefs.Prefix+"info", 2)
-	dat.Log.Println(errors.New("Recived f2. As follows:"+f2[1]+"."), 0)
+	dat.Log.Println(errors.New("Received f2. As follows:\"" + f2[1] + "\"."))
 	f3 := strings.Split(f2[1], " ")
-
-	e := false
-	t := false
-	m := false
-	c := false
+	dat.Log.Println(errors.New("Received f3. As follows:\"" + f3 + "\"."))
 
 	f := flags.Parse(f3)
 	for _, myflags := range f {
 		if myflags.Type == flags.Dash && myflags.Name == "e" {
-			e = true
+			cfg.embed = true
 		} else if myflags.Type == flags.Dash && myflags.Name == "t" {
-			t = true
+			cfg.embed = false
 		} else if myflags.Type == flags.Dash && myflags.Name == "m" {
-			m = true
+			cfg.useDMs = true
 		} else if myflags.Type == flags.Dash && myflags.Name == "c" {
-			c = true
+			cfg.useDMs = false
 		}
 	}
-	if m {
-		if t {
-			session.ChannelMessageSend(message.Author.ID, getBotInfoAsText())
-		} else if e {
-			session.ChannelMessageSendEmbed(message.Author.ID, getBotInfoAsEmbed())
-		} else if cfg.embed {
+
+	if cfg.useDMs {
+		if cfg.embed {
 			session.ChannelMessageSendEmbed(message.Author.ID, getBotInfoAsEmbed())
 		} else {
 			session.ChannelMessageSend(message.Author.ID, getBotInfoAsText())
-		}
-	} else if c {
-		if t {
-			session.ChannelMessageSend(message.ChannelID, getBotInfoAsText())
-		} else if e {
-			session.ChannelMessageSendEmbed(message.ChannelID, getBotInfoAsEmbed())
-		} else if cfg.embed {
-			session.ChannelMessageSendEmbed(message.ChannelID, getBotInfoAsEmbed())
-		} else {
-			session.ChannelMessageSend(message.ChannelID, getBotInfoAsText())
-		}
-	} else if !cfg.useDMs {
-		if t {
-			session.ChannelMessageSend(message.ChannelID, getBotInfoAsText())
-		} else if e {
-			session.ChannelMessageSendEmbed(message.ChannelID, getBotInfoAsEmbed())
-		} else if cfg.embed {
-			session.ChannelMessageSendEmbed(message.ChannelID, getBotInfoAsEmbed())
-		} else {
-			session.ChannelMessageSend(message.ChannelID, getBotInfoAsText())
 		}
 	} else {
-		if t {
-			session.ChannelMessageSend(message.Author.ID, getBotInfoAsText())
-		} else if e {
-			session.ChannelMessageSendEmbed(message.Author.ID, getBotInfoAsEmbed())
-		} else if cfg.embed {
+		if cfg.embed {
 			session.ChannelMessageSendEmbed(message.Author.ID, getBotInfoAsEmbed())
 		} else {
 			session.ChannelMessageSend(message.Author.ID, getBotInfoAsText())
