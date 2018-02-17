@@ -47,18 +47,16 @@ func info(session *dsg.Session, message *dsg.MessageCreate) {
 	m := false
 	c := false
 
-	if len(f3) > 2 {
-		f := flags.Parse(f3)
-		for _, myflags := range f {
-			if myflags.Type == flags.Dash && myflags.Name == "e" {
-				e = true
-			} else if myflags.Type == flags.Dash && myflags.Name == "t" {
-				t = true
-			} else if myflags.Type == flags.Dash && myflags.Name == "m" {
-				m = true
-			} else if myflags.Type == flags.Dash && myflags.Name == "c" {
-				c = true
-			}
+	f := flags.Parse(f3)
+	for _, myflags := range f {
+		if myflags.Type == flags.Dash && myflags.Name == "e" {
+			e = true
+		} else if myflags.Type == flags.Dash && myflags.Name == "t" {
+			t = true
+		} else if myflags.Type == flags.Dash && myflags.Name == "m" {
+			m = true
+		} else if myflags.Type == flags.Dash && myflags.Name == "c" {
+			c = true
 		}
 	}
 	if m {
@@ -136,11 +134,11 @@ func getBotInfoAsEmbed() *dsg.MessageEmbed {
 }
 
 func getBotInfoAsText() string {
-	return ` Bot information:
+	return "```" + `Bot information:
 	A list of commands can be brought up with ` + "`" + f.MyBot.Prefs.Prefix + "help`" + `
 
 	Bot github link: https://github.com/skilstak/discord-public
 	Bot version    : ` + f.MyBot.Prefs.Version + `
 	Command version: ` + cfg.version + `
-	`
+	` + "```"
 }

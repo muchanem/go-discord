@@ -3,10 +3,10 @@ package main
 import (
 	"fmt"
 	dsg "github.com/bwmarrin/discordgo"
-	cmd "github.com/skilstak/discord-public/cmd/commandHandler"
+	f "github.com/skilstak/discord-public"
 	"github.com/skilstak/discord-public/dat"
-	f "github.com/skilstak/discord-public/lib"
 	c "github.com/skilstak/go-colors"
+	"github.com/skilstak/go-discord/cmd/handler"
 	"os"
 	"os/signal"
 	"syscall"

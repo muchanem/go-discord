@@ -1,4 +1,4 @@
-package nil
+package cmd
 
 import (
 	dsg "github.com/bwmarrin/discordgo"
