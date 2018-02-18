@@ -70,9 +70,9 @@ func info(session *dsg.Session, message *dsg.MessageCreate) {
 		}
 	} else {
 		if cfg.embed {
-			session.ChannelMessageSendEmbed(message.Author.ID, getBotInfoAsEmbed())
+			session.ChannelMessageSendEmbed(message.ChannelID, getBotInfoAsEmbed())
 		} else {
-			session.ChannelMessageSend(message.Author.ID, getBotInfoAsText())
+			session.ChannelMessageSend(message.ChannelID, getBotInfoAsText())
 		}
 	}
 }

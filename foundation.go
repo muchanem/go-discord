@@ -120,10 +120,12 @@ func GetGuild(s *dsg.Session, m *dsg.Message) (st *dsg.Guild, err error) {
 func HasRole(s *dsg.Session, m *dsg.Message, role string) (bool, error) {
 	guild, err := GetGuild(s, m)
 	if err != nil {
+		print(err)
 		return false, err
 	}
 	member, err := s.GuildMember(guild.ID, m.Author.ID)
 	if err != nil {
+		print(err)
 		return false, err
 	}
 	for _, b := range MyBot.Users.AdminRoles {

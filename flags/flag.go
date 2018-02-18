@@ -1,5 +1,7 @@
 package flags
 
+import "github.com/skilstak/go-discord/dat"
+
 type Type string
 
 const (
@@ -48,7 +50,7 @@ func Parse(args []string) []*Flag {
 			}
 			flags = append(flags, cur)
 		default:
-			cur.Value = append(cur.Value, arg)
+			dat.Log.Println("System recived flag that was not valid.")
 		}
 	}
 	return flags

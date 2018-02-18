@@ -61,6 +61,7 @@ func MessageCreate(s *dsg.Session, m *dsg.MessageCreate) {
 	canRunCommand, err := canTriggerBot(s, m.Message)
 	if err != nil {
 		dat.Log.Println(err.Error())
+		dat.Log.Println("YO I FOUND SOME REALLY WILD CHANNEL DATA (dms): " + m.ChannelID)
 		s.ChannelMessageSend(m.ChannelID, "Hi there, <@"+m.Author.ID+">. I don't know if you meant to trigger me but I'm always in the background reading messages and yours was a little... weird to me. Could you please inform a server mod or admin about this? I'll regurgitate the error I got here:\n```"+err.Error()+"```\n. Hopefully someone can make something of it because I sure can't.")
 		return
 	}
@@ -117,7 +118,8 @@ func canTriggerBot(s *dsg.Session, m *dsg.Message) (bool, error) {
 
 	admin, err := f.HasRole(s, m, "")
 	if err != nil {
-		return false, err
+		dat.Log.Println(err.Error())
+		//return true, err
 	}
 
 	switch true {
