@@ -1,33 +1,23 @@
 package main
 
 import (
-	cmd "./src/commandHandler"
-	f "./src/foundation"
-	jsd "./src/jsonDecoder"
-	"flag"
 	"fmt"
 	dsg "github.com/bwmarrin/discordgo"
 	c "github.com/skilstak/go-colors"
+	f "github.com/skilstak/go-discord"
+	"github.com/skilstak/go-discord/cmd/handler"
+	"github.com/skilstak/go-discord/dat"
 	"os"
 	"os/signal"
 	"syscall"
 )
 
-var (
-	FilePath string
-)
-
-func init() {
-	flag.StringVar(&FilePath, "f", "", "Path to json file containing bot info")
-	flag.Parse()
-}
-
 func main() {
-	bot, err := jsd.GetBotInfo(FilePath)
+	bot, err := dat.GetBotInfo()
 	fmt.Println(c.B0 + "Reading bot prefrences file...")
 	if err != nil {
-		fmt.Println(c.R + "Unable to read prefrences file. Exiting program." + c.X)
-		panic(err)
+		dat.Log.Fatalln(err.Error())
+
 	} else {
 		fmt.Println(c.G + "Bot prefrences recived.")
 	}
@@ -56,8 +46,7 @@ func runBot(username string, secret string, id string, token string) *dsg.Sessio
 	dg, err := dsg.New("Bot " + token)
 
 	if err != nil {
-		fmt.Println(c.R+"Error in creating discord session. Exiting program."+c.X, err)
-		os.Exit(-1)
+		dat.Log.Fatalln(err.Error())
 	} else {
 		fmt.Println(c.G + "Session successfuly created.")
 	}
@@ -68,8 +57,7 @@ func runBot(username string, secret string, id string, token string) *dsg.Sessio
 	fmt.Println(c.B0 + "Opening websocket to Discord...")
 	err = dg.Open()
 	if err != nil {
-		fmt.Println(c.R+"Error opening websocket to Discord. Exiting program."+c.X, err)
-		os.Exit(-1)
+		dat.Log.Fatalln(err.Error())
 	} else {
 		fmt.Println(c.G + "Socket successfully opened.")
 	}
