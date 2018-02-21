@@ -17,6 +17,7 @@ func main() {
 	fmt.Println(c.B0 + "Reading bot prefrences file...")
 	if err != nil {
 		dat.Log.Fatalln(err.Error())
+
 	} else {
 		fmt.Println(c.G + "Bot prefrences recived.")
 	}

@@ -1,7 +1,6 @@
 package flags
 
 import "github.com/skilstak/go-discord/dat"
-
 type Type string
 
 const (
