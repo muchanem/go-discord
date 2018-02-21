@@ -21,7 +21,7 @@ var (
 )
 
 func init() {
-	dat.Load("info/config.json", &cfg)
+	dat.Load("cmds/info/config.json", &cfg)
 	Commands["info"] = &f.Command{
 		Name: "Bot Info",
 		Help: `Gets information about the bot, version number, so on.
@@ -64,27 +64,27 @@ func info(session *dsg.Session, message *dsg.MessageCreate) {
 
 	if cfg.useDMs {
 		if cfg.embed {
-			session.ChannelMessageSendEmbed(message.Author.ID, getBotInfoAsEmbed())
+			session.ChannelMessageSendEmbed(message.Author.ID, getBotInfoAsEmbed(session))
 		} else {
 			session.ChannelMessageSend(message.Author.ID, getBotInfoAsText())
 		}
 	} else {
 		if cfg.embed {
-			session.ChannelMessageSendEmbed(message.ChannelID, getBotInfoAsEmbed())
+			session.ChannelMessageSendEmbed(message.ChannelID, getBotInfoAsEmbed(session))
 		} else {
 			session.ChannelMessageSend(message.ChannelID, getBotInfoAsText())
 		}
 	}
 }
 
-func getBotInfoAsEmbed() *dsg.MessageEmbed {
+func getBotInfoAsEmbed(s *dsg.Session) *dsg.MessageEmbed {
 	return &dsg.MessageEmbed{
 		Author:      &dsg.MessageEmbedAuthor{},
 		Color:       0x073642,
 		Title:       "Bot Information",
-		Description: "A list of commands can be brought up with `" + f.MyBot.Prefs.Prefix + "help`.",
+		Description: "A list of commands can be brought up with `" + f.MyBot.Prefs.Prefix + "help <command>`.",
 		Thumbnail: &dsg.MessageEmbedThumbnail{
-			URL:    "https://i.imgur.com/lPTAiFE.png",
+			URL:    s.User("@me").AvatarURL(64),
 			Width:  64,
 			Height: 64,
 		},
@@ -110,7 +110,7 @@ func getBotInfoAsEmbed() *dsg.MessageEmbed {
 
 func getBotInfoAsText() string {
 	return "```" + `Bot information:
-	A list of commands can be brought up with ` + "`" + f.MyBot.Prefs.Prefix + "help`" + `
+	A list of commands can be brought up with ` + "`" + f.MyBot.Prefs.Prefix + "help <command>`" + `
 
 	Bot github link: https://github.com/skilstak/discord-public
 	Bot version    : ` + f.MyBot.Prefs.Version + `
