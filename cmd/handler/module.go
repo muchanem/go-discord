@@ -1,10 +1,12 @@
 package cmd
 
 import (
+	"errors"
 	dsg "github.com/bwmarrin/discordgo"
 	f "github.com/skilstak/go-discord"
 	"github.com/skilstak/go-discord/cmd/commands/info"
 	"github.com/skilstak/go-discord/cmd/commands/ping"
+	"github.com/skilstak/go-discord/cmd/commands/utils"
 	"github.com/skilstak/go-discord/dat"
 	"strings"
 )
@@ -21,10 +23,19 @@ var Cmd = map[string]*f.Command{}
  */
 
 func init() {
+	Cmd["help"] = &f.Command{
+		Name: "Command Help Page Search",
+		Help: `Info  : The built-in helper to get information about all of the bots commands
+Usage : ` + f.MyBot.Prefs.Prefix + `help <command>`,
+		Action: help,
+	}
 	for key, value := range ping.Commands {
 		Cmd[key] = value
 	}
 	for key, value := range info.Commands {
+		Cmd[key] = value
+	}
+	for key, value := range util.Commands {
 		Cmd[key] = value
 	}
 	//for key, value := range IMPORTNAMEHERE.Commands {
@@ -61,8 +72,7 @@ func MessageCreate(s *dsg.Session, m *dsg.MessageCreate) {
 	canRunCommand, err := canTriggerBot(s, m.Message)
 	if err != nil {
 		dat.Log.Println(err.Error())
-		dat.Log.Println("YO I FOUND SOME REALLY WILD CHANNEL DATA (dms): " + m.ChannelID)
-		s.ChannelMessageSend(m.ChannelID, "Hi there, <@"+m.Author.ID+">. I don't know if you meant to trigger me but I'm always in the background reading messages and yours was a little... weird to me. Could you please inform a server mod or admin about this? I'll regurgitate the error I got here:\n```"+err.Error()+"```\n. Hopefully someone can make something of it because I sure can't.")
+		dat.AlertDiscord(s, m, err)
 		return
 	}
 	if canRunCommand != true {
@@ -72,9 +82,22 @@ func MessageCreate(s *dsg.Session, m *dsg.MessageCreate) {
 	// Removing case sensitivity:
 	messageSanatized := strings.ToLower(m.Content)
 
-	// The trailing > is cut off the message so the commands can be more easily handled.
-	msg := strings.SplitAfterN(messageSanatized, f.MyBot.Prefs.Prefix, 2)
-	message := strings.Split(msg[1], " ")
+	// The prefix is cut off the message so the commands can be more easily handled.
+	var msg []string
+	if strings.HasPrefix(m.Content, f.MyBot.Prefs.Prefix) {
+		msg = strings.SplitAfterN(messageSanatized, f.MyBot.Prefs.Prefix, 2)
+		m.Content = msg[1]
+	} else if strings.HasPrefix(m.Content, "<@!"+f.MyBot.Auth.ClientID+">") {
+		msg = strings.SplitAfterN(messageSanatized, "<@!"+f.MyBot.Auth.ClientID+">", 2)
+		m.Content = strings.TrimSpace(msg[1])
+	} else {
+		err := errors.New("Message passed 'can run' checks but does not start with prefix:\n" + m.Content)
+		dat.Log.Println(err.Error())
+		dat.AlertDiscord(s, m, err)
+		return
+	}
+
+	message := strings.Split(m.Content, " ")
 
 	// Now the message is run to see if its a valid command and acted upon.
 	didAThing := false
@@ -85,10 +108,8 @@ func MessageCreate(s *dsg.Session, m *dsg.MessageCreate) {
 		}
 	}
 	if didAThing == false {
-		if strings.Contains(m.Message.Content, "@everyone") {
-			s.ChannelMessageSend(m.ChannelID, "Sorry <@"+m.Message.Author.ID+">, but I don't understand what you're saying.\nI'm also not going to @'ing everyone over it so don't bother trying.")
-		} else if strings.Contains(m.Message.Content, "@here") {
-			s.ChannelMessageSend(m.ChannelID, "Sorry <@"+m.Message.Author.ID+">, but I don't understand what you're saying.\nI'm also not going to be tricked into @'ing here over it so don't bother trying.")
+		if strings.Contains(m.Message.Content, "@") {
+			s.ChannelMessageSend(m.ChannelID, "Sorry <@"+m.Message.Author.ID+">, but I don't understand what you're saying.")
 		} else {
 			s.ChannelMessageSend(m.ChannelID, "Sorry <@"+m.Message.Author.ID+">, but I don't know what you mean by \"`"+m.Message.Content+"`\".")
 		}
@@ -125,7 +146,7 @@ func canTriggerBot(s *dsg.Session, m *dsg.Message) (bool, error) {
 	switch true {
 	case m.Author.ID == s.State.User.ID:
 		return false, nil
-	case !strings.HasPrefix(m.Content, f.MyBot.Prefs.Prefix):
+	case !strings.HasPrefix(m.Content, f.MyBot.Prefs.Prefix) && !strings.HasPrefix(m.Content, "<@!"+f.MyBot.Auth.ClientID+">"):
 		return false, nil
 	case admin:
 		return true, nil
@@ -198,6 +219,22 @@ func getRoles(m *dsg.Message) (string, error) {
 * TODO: Make the help not hard coded. Move into json file? Massive refactor for
 * v5.0-alpha probably.
  */
-//func help(s *dsg.Session, m *dsg.Message, f []*a.Flag) {
-
-//}
+func help(session *dsg.Session, message *dsg.MessageCreate) {
+	msg := strings.Split(message.Content, " ")
+	didAThing := false
+	if len(msg) <= 1 {
+		h := "Help Page Found:\n```" + Cmd["help"].Name + "\n" + Cmd["help"].Help + "```"
+		session.ChannelMessageSend(message.ChannelID, h)
+		return
+	}
+	for command, action := range Cmd {
+		if msg[1] == command {
+			help := "Help Page Found:\n```" + action.Name + "\n" + action.Help + "```"
+			session.ChannelMessageSend(message.ChannelID, help)
+			didAThing = true
+		}
+	}
+	if !didAThing {
+		session.ChannelMessageSend(message.ChannelID, "Sorry, but I couldn't find a help page for that command.")
+	}
+}

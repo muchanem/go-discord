@@ -60,7 +60,7 @@ func Save(fileName string, v interface{}) error {
 func Load(fileName string, v interface{}) error {
 	lock.Lock()
 	defer lock.Unlock()
-	file, err := os.Open(path + "botData/" + fileName)
+	file, err := os.Open(path + "cmds/" + fileName)
 	if err != nil {
 		return err
 	}
@@ -71,7 +71,7 @@ func Load(fileName string, v interface{}) error {
 }
 
 func GetBotInfo() (f.BotType, error) {
-	raw, err := ioutil.ReadFile(path + "staticData/preferences.json")
+	raw, err := ioutil.ReadFile(path + "config/preferences.json")
 	var b f.BotType
 
 	if err != nil {

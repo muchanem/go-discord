@@ -1,8 +1,9 @@
-package utils
+package util
 
 import (
 	dsg "github.com/bwmarrin/discordgo"
 	f "github.com/skilstak/go-discord"
+	"github.com/skilstak/go-discord/dat"
 )
 
 var Commands = make(map[string]*f.Command)
@@ -26,18 +27,18 @@ func init() {
 *
 * NOTE: If you print this into a discord chat, it WILL mention @everyone
  */
-func getRoles(session *dsg.Session, message *dsg.Message) {
+func getRoles(session *dsg.Session, message *dsg.MessageCreate) {
 	s := session
-	m := message
+	m := message.Message
 
 	guild, err := f.GetGuild(f.DG, m)
 	if err != nil {
-		f.Panic(s, m, err, false)
+		dat.Log.Println(err.Error())
 		return
 	}
 	roles, err := f.DG.GuildRoles(guild.ID)
 	if err != nil {
-		f.Panic(s, m, err, false)
+		dat.Log.Println(err.Error())
 		return
 	}
 	role := "Server role list:\n```\n"
