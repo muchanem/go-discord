@@ -2,8 +2,8 @@ package util
 
 import (
 	dsg "github.com/bwmarrin/discordgo"
-	f "github.com/skilstak/go-discord"
-	"github.com/skilstak/go-discord/dat"
+	f "github.com/whitman-colm/go-discord"
+	"github.com/whitman-colm/go-discord/dat"
 	//"strconv"
 )
 
@@ -33,7 +33,7 @@ func init() {
 *
 * Parameters/return values:
 * This function complies with the foundation's action function protocol.
-* For documentation on that, please see https://github.com/skilstak/discord-public
+* For documentation on that, please see https://github.com/whitman-colm/discord-public
 *
 * TODO: Make a godoc for our nonsence.
 *

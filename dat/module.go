@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"flag"
 	dsg "github.com/bwmarrin/discordgo"
-	f "github.com/skilstak/go-discord"
+	f "github.com/whitman-colm/go-discord"
 	"io"
 	"io/ioutil"
 	"log"

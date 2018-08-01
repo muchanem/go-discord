@@ -3,12 +3,12 @@ package cmd
 import (
 	"errors"
 	dsg "github.com/bwmarrin/discordgo"
-	f "github.com/skilstak/go-discord"
-	"github.com/skilstak/go-discord/cmd/commands/info"
-	"github.com/skilstak/go-discord/cmd/commands/moderation"
-	"github.com/skilstak/go-discord/cmd/commands/ping"
-	"github.com/skilstak/go-discord/cmd/commands/utils"
-	"github.com/skilstak/go-discord/dat"
+	f "github.com/whitman-colm/go-discord"
+	"github.com/whitman-colm/go-discord/cmd/commands/info"
+	"github.com/whitman-colm/go-discord/cmd/commands/moderation"
+	"github.com/whitman-colm/go-discord/cmd/commands/ping"
+	"github.com/whitman-colm/go-discord/cmd/commands/utils"
+	"github.com/whitman-colm/go-discord/dat"
 	"strings"
 )
 

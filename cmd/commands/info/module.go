@@ -3,9 +3,9 @@ package info
 import (
 	//"errors"
 	dsg "github.com/bwmarrin/discordgo"
-	f "github.com/skilstak/go-discord"
-	"github.com/skilstak/go-discord/dat"
-	"github.com/skilstak/go-discord/flags"
+	f "github.com/whitman-colm/go-discord"
+	"github.com/whitman-colm/go-discord/dat"
+	"github.com/whitman-colm/go-discord/flags"
 	"strings"
 )
 
@@ -32,7 +32,7 @@ func init() {
 	 -t : Get info as raw text
 	 -m : Get info via direct message
 	 -c : Post info in channel
-Github  : https://github.com/skilstak/discord-public/cmd/commands/info`,
+Github  : https://github.com/whitman-colm/discord-public/cmd/commands/info`,
 		Action: info,
 	}
 }
@@ -87,7 +87,7 @@ func getBotInfoAsEmbed(session *dsg.Session) *dsg.MessageEmbed {
 			},
 			&dsg.MessageEmbedField{
 				Name:   "Link to bot framework:",
-				Value:  "https://github.com/skilstak/discord-public",
+				Value:  "https://github.com/whitman-colm/discord-public",
 				Inline: true,
 			},
 			&dsg.MessageEmbedField{
@@ -103,7 +103,7 @@ func getBotInfoAsText() string {
 	return "```" + `Bot information:
 A list of commands can be brought up with ` + "`" + f.MyBot.Prefs.Prefix + "help <command>`" + `
 
-Bot github link : https://github.com/skilstak/discord-public
+Bot github link : https://github.com/whitman-colm/discord-public
 Bot version     : ` + f.MyBot.Prefs.Version + `
 Command version : ` + cfg.version + "```"
 }
