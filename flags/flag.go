@@ -21,7 +21,7 @@ const (
 type Flag struct {
 	Type  Type
 	Name  string
-	Value []string
+	Value string
 }
 
 // Parse parses a message for flags.
@@ -49,6 +49,10 @@ func Parse(args []string) []*Flag {
 				Name: arg[1:],
 			}
 			flags = append(flags, cur)
+		case arg[0] != '-':
+			if len(flags) > 0 {
+				flags[len(flags)-1].Value += arg + " "
+			}
 		default:
 			dat.Log.Println("System recived flag that was not valid: \"" + arg + "\" .")
 		}

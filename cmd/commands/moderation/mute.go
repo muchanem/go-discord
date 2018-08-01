@@ -49,9 +49,9 @@ func muteUser(session *dsg.Session, message *dsg.MessageCreate) {
 
 	for _, flag := range flagsParsed {
 		if flag.Type == flags.DoubleDash && flag.Name == "reason" {
-			reason = flag.Value[0]
+			reason = flag.Value
 		} else if flag.Type == flags.DoubleDash && flag.Name == "reason" {
-			duration, err = time.ParseDuration(flag.Value[0])
+			duration, err = time.ParseDuration(flag.Value)
 			if err != nil {
 				dat.Log.Println(err)
 				dat.AlertDiscord(s, m, err)

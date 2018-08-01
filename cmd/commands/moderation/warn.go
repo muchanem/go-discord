@@ -45,13 +45,7 @@ func warnUser(session *dsg.Session, message *dsg.MessageCreate) {
 
 	for _, flag := range flagsParsed {
 		if flag.Type == flags.DoubleDash && flag.Name == "reason" {
-			print("\n")
-			print(flag.Value)
-			reason = strings.Join(flag.Value, ";")
-			print(reason)
-			print("\n")
-		} else {
-			print("\nNo flags detected.\n")
+			reason = flag.Value
 		}
 	}
 
