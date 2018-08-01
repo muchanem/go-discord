@@ -90,42 +90,23 @@ func GetGuild(s *dsg.Session, m *dsg.Message) (st *dsg.Guild, err error) {
 	gid := chn.GuildID
 
 	return s.Guild(gid)
-
 }
 
-/* # Checks if user can run a command
-* This is a more detailed check to see if a user has the role perms to run a
-* command. It is a very complicated wrapper for what would in theory be a
-* very simple task.
-*
-* Do not confuse this with commandHandler's "canTriggerBot()". This function
-* determines if a user has a specific role, that just checks if the command is
-* run in the correct channel and if they aren't blacklisted.
-*
-* Parameters:
-* - s (type *discordgo.Session) The current running discord session,
-*     (discordgo needs that always apparently)
-* - message (type *discordgo.Message) | the author's id is extracted from this.
-* - role (type string) | the role **ID NUMBER!!** that needs to be matched.
-*
-* Returns:
-* - bool | if the role was found or not, if an error was found it will be false
-* - err  | if an error was encountered during the process.
-*     To be handled by not-the-function
-*
-* User's whose roles are considered "admin" by the json config file return an
-* automatic true regardless if they have the role listed. Hence if you want to
-* lock off a command to only "admin" users, provide an empty string
+/* Checks if user has permission to run a command
+* This function is a wrapper to check if a user has the permission needed to
+* run a given command. This checks for both specific permissions the user has
+* in the server (see below) and for "bot staff" roles defined in the config.
+* Permissions are integer constants defined by discordgo:
+* https://godoc.org/github.com/bwmarrin/discordgo#pkg-constants
+* Note that the check is non-hierarchichal.
  */
-func HasRole(s *dsg.Session, m *dsg.Message, role string) (bool, error) {
+func HasPermissions(s *dsg.Session, m *dsg.Message, userID string, perm int) (bool, error) {
 	guild, err := GetGuild(s, m)
 	if err != nil {
-		print(err)
 		return false, err
 	}
 	member, err := s.GuildMember(guild.ID, m.Author.ID)
 	if err != nil {
-		print(err)
 		return false, err
 	}
 	for _, b := range MyBot.Users.AdminRoles {
@@ -133,10 +114,69 @@ func HasRole(s *dsg.Session, m *dsg.Message, role string) (bool, error) {
 			return true, nil
 		}
 	}
+	for _, b := range member.Roles {
+		role, err := RoleFromID(s, m, b)
+		if err != nil {
+			return false, err
+		}
 
-	hasRole := Contains(member.Roles, role)
-	return hasRole, nil
+		if role.Permissions&perm != 0 {
+			return true, nil
+		} else if role.Permissions&dsg.PermissionAdministrator != 0 {
+			return true, nil
+		}
+	}
+	return false, nil
 }
+
+// a stupid, inefficent function to get a role from its id
+func RoleFromID(s *dsg.Session, m *dsg.Message, id string) (*dsg.Role, error) {
+	guild, err := GetGuild(s, m)
+	if err != nil {
+		return &dsg.Role{}, err
+	}
+	roles, err := s.GuildRoles(guild.ID)
+	if err != nil {
+		return &dsg.Role{}, err
+	}
+
+	for _, role := range roles {
+		if role.ID == id {
+			return role, nil
+		}
+	}
+	return &dsg.Role{}, nil
+}
+
+/* # Manage User Responces Via Reactions
+* This function is the manager for interacting with users via discord
+* reations. Useful for scrolling through manuals, voting, and other
+* services with a short enumeration of responses.
+*
+* Parameters:
+* - UserID (string) | ID of user whose reaction you're gauging. Leave blank for
+*	all users
+* - MessageID (string) | ID of the message to add the reactions to. Leave blank
+*	for last message sent by bot
+* - Emojis ([]dsg.Emoji) | Emojis to add to the selected message IN ORDER.
+*	 contains some pre-defined global emotes:
+*		- :octagonal_sign:
+*		- :rewind:
+*		- :arrow_backward:
+*		- :arrow_forward:
+*		- :fast_forward:
+*		- :zero:
+*		- :one:
+*		- :two:
+*		- :three:
+*		- :four:
+*		- :five:
+*		- :six:
+*		- :seven:
+*		- :eight:
+*		- :nine:
+ */
+//func ReactionResponce(UserID string, MessageID string, Emojis [dsg.Emoji])
 
 /* # Check if item is in array
 * This function checks if a value is in a slice (string only)
@@ -159,14 +199,6 @@ func Contains(list []string, item string) bool {
 		}
 	}
 	return false
-}
-
-func Panic(s *dsg.Session, m *dsg.MessageCreate, err error, fatal bool) {
-	s.ChannelMessageSend(m.ChannelID, "**ERROR ENCOUNTERED. DETAILS FOLLOW:**\n```"+err.Error()+"```\nThis incident will be reported.")
-	if fatal {
-		s.ChannelMessageSend(m.ChannelID, "The bot is now \"gracefully\" force quitting, however it will fail to close out of its session with discord and may still apear online.\n*Have a good day!*")
-		panic(-1)
-	}
 }
 
 // An initialized instance of the BotType for use everywhere in this project.

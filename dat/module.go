@@ -10,6 +10,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"runtime"
 	"sync"
 	"time"
 )
@@ -17,20 +18,32 @@ import (
 var (
 	currentTime string
 	path        string
+	ps          string
 	Log         *log.Logger
 )
 
 func init() {
-	flag.StringVar(&path, "p", "./dat", "Path to directory where the bot can store and work with data.")
+	ps = OSCheck()
+	flag.StringVar(&path, "p", "."+ps+"dat", "Path to directory where the bot can store and work with data.")
 	flag.Parse()
 
 	currentTime = time.Now().Format("2006-01-02@15h04m")
 
-	file, err := os.Create(path + "logs/botlogs@" + currentTime + ".log")
+	file, err := os.Create(path + "logs" + ps + "botlogs@" + currentTime + ".log")
 	if err != nil {
 		panic(err)
 	}
 	Log = log.New(file, "", log.Ldate|log.Ltime|log.Llongfile|log.LUTC)
+}
+
+// To make this system universal, the bot needs to know
+// wether it has to use a stupid backslash
+func OSCheck() string {
+	if runtime.GOOS == "windows" {
+		return "\\"
+	} else {
+		return "/"
+	}
 }
 
 var lock sync.Mutex
@@ -39,7 +52,7 @@ func Save(fileName string, v interface{}) error {
 	lock.Lock()
 	defer lock.Unlock()
 
-	file, err := os.Create(path + "botData/" + fileName)
+	file, err := os.Create(path + "cmds" + ps + fileName)
 	if err != nil {
 		return err
 	}
@@ -60,7 +73,7 @@ func Save(fileName string, v interface{}) error {
 func Load(fileName string, v interface{}) error {
 	lock.Lock()
 	defer lock.Unlock()
-	file, err := os.Open(path + "botData/" + fileName)
+	file, err := os.Open(path + "cmds" + ps + fileName)
 	if err != nil {
 		return err
 	}
@@ -71,7 +84,7 @@ func Load(fileName string, v interface{}) error {
 }
 
 func GetBotInfo() (f.BotType, error) {
-	raw, err := ioutil.ReadFile(path + "staticData/preferences.json")
+	raw, err := ioutil.ReadFile(path + "config" + ps + "preferences.json")
 	var b f.BotType
 
 	if err != nil {
