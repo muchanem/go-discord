@@ -143,13 +143,14 @@ func canTriggerBot(s *dsg.Session, m *dsg.Message) (bool, error) {
 
 	admin, err := f.HasPermissions(s, m, m.Author.ID, dsg.PermissionAdministrator)
 	if err != nil {
-		dat.Log.Println(err.Error())
-		//return true, err
+		dat.Log.Println(err)
+		return false, err
 	}
 
 	switch true {
 	case m.Author.ID == s.State.User.ID:
 		return false, nil
+	//TODO: look at this stupid line. that seems like it shouldn't work.
 	case !strings.HasPrefix(m.Content, f.MyBot.Prefs.Prefix) && !strings.HasPrefix(m.Content, "<@!"+f.MyBot.Auth.ClientID+">"):
 		return false, nil
 	case admin:

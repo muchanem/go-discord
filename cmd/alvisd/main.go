@@ -14,22 +14,16 @@ import (
 	"syscall"
 )
 
-const (
-	name        = "godiscord"
-	description = "go-discord bot"
-	port        = "15212"
-)
-
-var option string
-
 type Service struct {
 	daemon.Daemon
 }
 
-func init() {
-	flag.StringVar(&option, "s", "help", "Action to take")
-	flag.Parse()
-}
+const (
+	name        = "godiscordd"
+	description = "A go-discord based bot daemon"
+)
+
+var port string
 
 func (service *Service) Manage() (string, error) {
 	usage := "Usage: " + name + " install | remove | start | stop | status"
@@ -52,7 +46,7 @@ func (service *Service) Manage() (string, error) {
 		}
 	}
 
-	//TODO: set up the bot to exist here.
+	runBot()
 
 	interrupt := make(chan os.Signal, 1)
 	signal.Notify(interrupt, os.Interrupt, os.Kill, syscall.SIGTERM)
@@ -71,6 +65,7 @@ func (service *Service) Manage() (string, error) {
 		case conn := <-listen:
 			go handleClient(conn)
 		case killSignal := <-interrupt:
+			f.DG.Close()
 			dat.Log.Println("Recived signal:", killSignal)
 			dat.Log.Println("Stopping listening on ", listener.Addr())
 			listener.Close()
@@ -82,7 +77,6 @@ func (service *Service) Manage() (string, error) {
 			return "Daemon was killed", nil
 		}
 	}
-
 	return usage, nil
 }
 
@@ -121,6 +115,10 @@ func main() {
 	}
 	fmt.Println(status)
 
+	// And the main should end here. so what to do about this?
+}
+
+func runBot() {
 	bot, err := dat.GetBotInfo()
 	fmt.Println(c.B0 + "Reading bot prefrences file...")
 	dat.Log.Println("Reading bot prefs file...")
@@ -128,27 +126,12 @@ func main() {
 		dat.Log.Fatalln(err.Error())
 	} else {
 		dat.Log.Println("Bot prefrences recived.")
-		fmt.Println(c.G + "Bot prefrences recived.")
 	}
-	fmt.Println(c.B0 + "Writing bot preferences")
 	f.MyBot = bot
-	f.DG = runBot(f.MyBot.Auth.Username, f.MyBot.Auth.Secret, f.MyBot.Auth.ClientID, f.MyBot.Auth.Token)
+	port = bot.Auth.Port
 
-	f.DG.UpdateStatus(0, f.MyBot.Prefs.Playing)
-
-	fmt.Println(c.B0 + "Bot is now running! Press CTRL+C to exit." + c.X)
-	sc := make(chan os.Signal, 1)
-	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
-	<-sc
-
-	f.DG.Close()
-	dat.Log.Println("Escape for bot called. The system is now closing cleanly")
-}
-
-func runBot(username string, secret string, id string, token string) *dsg.Session {
 	dat.Log.Println("Creating bot session")
-	dg, err := dsg.New("Bot " + token)
-
+	dg, err := dsg.New("Bot " + bot.Auth.Token)
 	if err != nil {
 		dat.Log.Fatalln(err)
 	} else {
@@ -164,7 +147,11 @@ func runBot(username string, secret string, id string, token string) *dsg.Sessio
 	} else {
 		dat.Log.Println("Socket successfully opened.")
 	}
-	return dg
+	f.DG = dg
+
+	f.DG.UpdateStatus(0, f.MyBot.Prefs.Playing)
+
+	dat.Log.Println("Escape for bot called. The system is now closing cleanly")
 }
 
 /*func installWizard(service *Service) (string, error) {

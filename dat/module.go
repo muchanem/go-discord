@@ -3,7 +3,6 @@ package dat
 import (
 	"bytes"
 	"encoding/json"
-	"flag"
 	dsg "github.com/bwmarrin/discordgo"
 	f "github.com/whitman-colm/go-discord"
 	"io"
@@ -17,15 +16,17 @@ import (
 
 var (
 	currentTime string
-	path        string
 	ps          string
 	Log         *log.Logger
 )
 
+var path string
+
 func init() {
 	ps = OSCheck()
-	flag.StringVar(&path, "p", "."+ps+"dat", "Path to directory where the bot can store and work with data.")
-	flag.Parse()
+
+	path = "." + ps
+	//path = "/home/whitman-colm/bots/pyra/"
 
 	currentTime = time.Now().Format("2006-01-02@15h04m")
 

@@ -15,10 +15,10 @@ import (
  */
 type BotType struct {
 	Auth struct {
-		Username string `json:"username"`
 		ClientID string `json:"clientID"`
 		Secret   string `json:"secret"`
 		Token    string `json:"token"`
+		Port     string `json:"port"`
 	} `json:"auth"`
 	Prefs struct {
 		Prefix  string `json:"prefix"`
